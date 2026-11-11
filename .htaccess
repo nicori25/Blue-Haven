@@ -1,0 +1,8 @@
+Options -Indexes
+<FilesMatch "\.(sql|md|json|yaml|yml|env|example)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "^(Dockerfile|LICENSE|\.git.*)$">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /(?:\.git|node_modules|tests|scripts|bd|docs)(?:/|$)
