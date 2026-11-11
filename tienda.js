@@ -166,3 +166,31 @@ function tiendaColisiona(posicion) {
   }
   return false;
 }
+
+// Entrada accesible desde la zona de interacción: busca un punto libre dentro del edificio.
+TIENDA.regreso = null;
+function puntoInteriorTienda() {
+  if(!TIENDA.mallasParedes.length)return null;
+  const casa=TIENDA.mallasParedes.find(m=>(m.name||'').toLowerCase().includes('house'));
+  if(!casa)return null;
+  const caja=new THREE.Box3().setFromObject(casa),centro=caja.getCenter(new THREE.Vector3());
+  for(const radio of [0,20,40,60,80])for(let i=0;i<8;i++){
+    const pos=createVector(centro.x+Math.cos(i*Math.PI/4)*radio,centro.z+Math.sin(i*Math.PI/4)*radio);
+    if(pos.x<caja.min.x+15||pos.x>caja.max.x-15||pos.y<caja.min.z+15||pos.y>caja.max.z-15)continue;
+    if(!tiendaColisiona(pos))return pos;
+  }
+  return null;
+}
+function entrarALaTienda() {
+  if(TIENDA.regreso)return true;
+  const destino=puntoInteriorTienda();if(!destino)return false;
+  TIENDA.regreso={x:jugador.posicion.x,y:jugador.posicion.y,angulo:jugador.angulo,inclinacion:jugador.inclinacion};
+  jugador.posicion.set(destino);jugador.angulo=-Math.PI/2;jugador.inclinacion=0;
+  jugador.alturaPiso=tiendaAlturaPiso(destino.x,destino.y,0);jugador.alturaSalto=0;
+  return true;
+}
+function salirDeLaTienda() {
+  if(!TIENDA.regreso)return;
+  const p=TIENDA.regreso;jugador.posicion.set(p.x,p.y);jugador.angulo=p.angulo;jugador.inclinacion=p.inclinacion;
+  jugador.alturaPiso=0;TIENDA.regreso=null;
+}

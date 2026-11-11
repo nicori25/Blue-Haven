@@ -9,3 +9,6 @@ fs.writeFileSync('supabase/seed.sql', sql);
 
 const migracion = fs.readFileSync('supabase/migrations/202611110001_bluehaven.sql', 'utf8');
 fs.writeFileSync('supabase/instalar.sql', migracion.replace(/commit;\s*$/, sql + '\ncommit;\n'));
+
+const tienda=fs.readFileSync('supabase/migrations/20261111234025_tienda_equipamiento.sql','utf8');
+fs.appendFileSync('supabase/instalar.sql','\n'+tienda);

@@ -97,7 +97,7 @@ async function cargarDatosUsuario() {
   dinero = Number(estado.perfil.dinero) || 0;
   tieneCañaBambu = estado.perfil.tiene_bambu === true;
   cañaEquipada = tieneCañaBambu && cañaEquipada === "bambu" ? "bambu" : "basica";
-  equiparCaña(cañaEquipada);
+  await cargarEquipoRemoto();
   guardarProgresoLocal();
 }
 
@@ -121,7 +121,7 @@ function draw() {
     if (
       !interfazBloqueada() && sistemaCaptura.estado === "inactivo" &&
       menuTienda === "cerrado" &&
-      estadoLanzamiento === "reposo"
+      estadoLanzamiento === "reposo" && !preparandoLance
     ) {
       jugador.actualizar();
     }
@@ -358,8 +358,7 @@ function keyPressed() {
       estadoLanzamiento === "reposo" &&
       cercaDeTienda()
     ) {
-      if (inventario.length > 0) abrirMenuTienda();
-      else mostrarMensaje("No tenés peces para vender.");
+      abrirMenuTienda();
     }
     return false;
   }
@@ -455,6 +454,7 @@ function controlarClicEscena(evento) {
 }
 
 function cancelarPesca() {
+  secuenciaLance++;
   if (sistemaCaptura.estado === "inactivo" && estadoLanzamiento === "reposo")
     return;
 
@@ -477,11 +477,20 @@ let preparacionLanzamiento = 0;
 
 // Lanza el anzuelo desde la punta de la caña. Se puede usar desde cualquier lugar:
 // si hay agua enfrente cae ahí; si no, cae en el suelo y la línea se recoge sola.
-function lanzarORecogerCaña() {
+let preparandoLance=false;
+let secuenciaLance=0;
+async function lanzarORecogerCaña() {
+  if(preparandoLance) return;
   if (estadoLanzamiento === "reposo") {
     const agua = buscarPuntoPescaEnfrente();
     if (agua) {
-      iniciarLanzamientoAnzuelo(agua, true);
+      preparandoLance=true;
+      const secuencia=++secuenciaLance;
+      try {
+        efectosLance=await prepararEquipoLance();
+        if(secuencia===secuenciaLance && document.body.classList.contains('jugando')) iniciarLanzamientoAnzuelo(agua, true);
+      } catch(e) { mostrarMensaje('No se pudo preparar el lanzamiento.'); estadoGuardado(e.message); }
+      finally { preparandoLance=false; }
     } else {
       const direccion = new THREE.Vector3();
       camara3D.getWorldDirection(direccion);
@@ -640,7 +649,7 @@ function actualizarLanzamientoAnzuelo() {
         estadoLanzamiento = "en_agua";
         posicionAnzueloMundo.copy(destinoPescaMundo);
         faseSalpicadura = 1;
-        esperaMordida = random(2, 6);
+        esperaMordida = random(2, 6) * efectosLance.espera;
       } else {
         mostrarMensaje("Ahí no hay agua. Apuntá hacia el lago para pescar.");
         estadoLanzamiento = "retrayendo";
@@ -892,6 +901,7 @@ function dibujarIndicadorCañaTienda() {
 const MODELOS_CAÑA = {
   basica: { ruta: "models/fishing_rod/scene.gltf", ocultar: [] },
   bambu: { ruta: "models/bamboo_fishing_rod/scene.gltf", ocultar: ["robe"] },
+  metal: { ruta: "models/bamboo_fishing_rod/scene.gltf", ocultar: ["robe"], metal: true },
 };
 const cacheModelosCaña = {};
 let cañaVisualActual = null;
@@ -926,7 +936,7 @@ function obtenerModeloCaña(tipo, alTerminar) {
 
   // Para la caña de bambú nos aseguramos de tener cargada la básica primero,
   // así reutilizamos el mismo anzuelo colgante en la punta.
-  if (tipo === "bambu" && !cacheModelosCaña.basica) {
+  if (tipo !== "basica" && !cacheModelosCaña.basica) {
     obtenerModeloCaña("basica", () => obtenerModeloCaña("bambu", alTerminar));
     return;
   }
@@ -948,6 +958,7 @@ function obtenerModeloCaña(tipo, alTerminar) {
           mallaHook = objeto;
         }
         if (objeto.material) {
+          if(config.metal){objeto.material=objeto.material.clone();objeto.material.map=null;objeto.material.color.setHex(0xb9c7d5);objeto.material.metalness=.8;objeto.material.roughness=.3;}
           objeto.material.side = THREE.DoubleSide;
           objeto.material.depthTest = false;
           objeto.material.needsUpdate = true;

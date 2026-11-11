@@ -44,6 +44,25 @@ async function rpc(c, name, args) {
   await rpc(a, 'bh_registrar_pregunta', { p_pregunta: '¿Dónde vive el Atún?', p_respuesta: 'Océano' });
   const preguntas = await a.from('preguntas_chatbot').select('*'); assert.equal(preguntas.data.length, 1);
   assert.deepEqual((await b.from('preguntas_chatbot').select('*')).data, []);
+  let tienda=await rpc(a,'bh_tienda_estado');assert.equal(tienda.productos.length,9);assert.equal(tienda.objetos.bambu,1);
+  assert.ok((await b.rpc('bh_comprar_producto',{p_producto_id:'metal',p_token:crypto.randomUUID()})).error);
+  assert.ok((await a.rpc('bh_equipar_producto',{p_producto_id:'metal'})).error);
+  const compra={p_producto_id:'metal',p_token:crypto.randomUUID()};
+  tienda=await rpc(a,'bh_comprar_producto',compra);assert.equal(tienda.dinero,1474);
+  assert.equal((await rpc(a,'bh_comprar_producto',compra)).dinero,1474);
+  assert.ok((await a.rpc('bh_comprar_producto',{...compra,p_token:crypto.randomUUID()})).error);
+  await rpc(a,'bh_equipar_producto',{p_producto_id:'metal'});
+  await rpc(a,'bh_comprar_producto',{p_producto_id:'precision',p_token:crypto.randomUUID()});
+  await rpc(a,'bh_equipar_producto',{p_producto_id:'precision'});
+  const pack={p_producto_id:'lombriz',p_token:crypto.randomUUID()};
+  const duplicadas=await Promise.all([rpc(a,'bh_comprar_producto',pack),rpc(a,'bh_comprar_producto',pack)]);
+  assert.equal(duplicadas[1].objetos.lombriz,5);assert.equal(duplicadas[1].dinero,1349);
+  await rpc(a,'bh_equipar_producto',{p_producto_id:'lombriz'});
+  for(let i=0;i<5;i++){const lance=await rpc(a,'bh_preparar_pesca');assert.equal(lance.efectos.espera,.7);assert.equal(lance.efectos.dificultad,.75);assert.equal(lance.efectos.enganche,.15);assert.equal(lance.estado.objetos.lombriz,4-i)}
+  const sinCebo=await rpc(a,'bh_preparar_pesca');assert.equal(sinCebo.efectos.espera,1);assert.equal(sinCebo.estado.equipo.cebo,'sin_cebo');
+  assert.ok((await a.from('equipo_usuario').update({cantidad:999}).eq('usuario_id',idA)).error);
+  assert.deepEqual((await b.from('equipo_usuario').select('*').eq('usuario_id',idA)).data,[]);
+  assert.ok((await anon.rpc('bh_tienda_estado')).error);
   await a.auth.signOut(); assert.ok((await a.rpc('bh_estado')).error);
   console.log('Supabase Auth + PostgreSQL + PostgREST: cuentas, RLS, concurrencia, capturas, economía y guía OK');
 })().catch(e => { console.error(e); process.exitCode = 1; });

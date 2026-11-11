@@ -75,6 +75,7 @@ function volverAlAcceso(mensaje = '') {
   if (document.pointerLockElement) document.exitPointerLock();
   if (typeof cerrarChat === 'function') cerrarChat();
   document.getElementById('ajustes').close();
+  if(typeof dialogoComercio!=='undefined')dialogoComercio.close();
   document.body.classList.remove('jugando'); document.body.classList.remove('chat-saludado');
   document.getElementById('chat-mensajes').replaceChildren();
   document.getElementById('barra-juego').hidden = true;
