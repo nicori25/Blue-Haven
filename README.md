@@ -87,3 +87,13 @@ Las nueve especies combinan contenido real y fantasía del prototipo. Las especi
 ## Integración actual de Supabase
 
 `base-datos.js` concentra el acceso a Auth y las funciones RPC. Las políticas RLS aíslan las cuentas; las funciones de PostgreSQL calculan precios y ejecutan ventas/compras en transacciones. El catálogo del usuario se descarga de Supabase y también alimenta la enciclopedia y la guía. El modo invitado sigue usando su partida local independiente. Ver [instalación](supabase/README.md) y [validación](docs/VALIDACION.md).
+
+## Publicación en GitHub Pages
+
+El workflow `Publicar main en GitHub Pages` publica exclusivamente la rama `main` en:
+
+https://nicori25.github.io/Blue-Haven/
+
+Solo se incluyen el HTML, CSS, JavaScript, bibliotecas y recursos del juego. Cada cambio en `main` vuelve a publicar; las ramas alternativas no reemplazan el sitio principal.
+
+En Supabase → Authentication → URL Configuration, la dirección de producción debe ser `https://nicori25.github.io/Blue-Haven/` y la lista de redirecciones debe incluir `https://nicori25.github.io/Blue-Haven/**`, conservando las URLs de desarrollo que necesites. El cliente ya usa el origen y la ruta actuales al solicitar la confirmación del email.
