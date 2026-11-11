@@ -79,19 +79,23 @@ async function iniciarJuego() {
 }
 
 async function cargarDatosUsuario() {
-  const [res, resInv] = await Promise.all([fetch("api/catalogo.php"), fetch("api/mi_inventario.php")]);
-  if (!res.ok || !resInv.ok) throw new Error("No se pudo cargar tu partida. Reintentá.");
-  catalogoEspecies = await res.json();
-  const invRemoto = await resInv.json();
-  if (!Array.isArray(catalogoEspecies) || !Array.isArray(invRemoto)) throw new Error("Respuesta inválida del servidor");
-  inventario = invRemoto;
+  const estado = await BaseDatos.estado();
+  if (!estado?.perfil || !Array.isArray(estado.catalogo) || !Array.isArray(estado.inventario)) {
+    throw new Error("No se pudo cargar tu partida de Supabase.");
+  }
+  window.sesionUsuario = estado.perfil;
+  catalogoEspecies = estado.catalogo;
+  inventario = estado.inventario;
+  CATALOGO_ESPECIES.splice(0, CATALOGO_ESPECIES.length, ...catalogoEspecies.map(p => ({ ...p.datos, ...p })));
+  for (const k in REGISTRO_CAPTURAS) delete REGISTRO_CAPTURAS[k];
   for (const especie of catalogoEspecies) {
     if (especie.descubierto) REGISTRO_CAPTURAS[especie.nombre] = {
-      ...(REGISTRO_CAPTURAS[especie.nombre] || {}), capturas: Number(especie.cantidad_capturada)
+      capturas: Number(especie.cantidad_capturada), mejorCalidadId: especie.mejorCalidadId,
+      mejorPrecio: especie.mejorPrecio
     };
   }
-  dinero = Number(window.sesionUsuario.dinero) || 0;
-  tieneCañaBambu = !!Number(window.sesionUsuario.tiene_bambu);
+  dinero = Number(estado.perfil.dinero) || 0;
+  tieneCañaBambu = estado.perfil.tiene_bambu === true;
   cañaEquipada = tieneCañaBambu && cañaEquipada === "bambu" ? "bambu" : "basica";
   equiparCaña(cañaEquipada);
   guardarProgresoLocal();

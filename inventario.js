@@ -47,12 +47,10 @@ function obtenerIdPez(nombre) {
 
 let operacionInventario = false;
 async function apiJuego(ruta, datos = {}) {
-  const res = await fetch("api/" + ruta + ".php", {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datos)
-  });
-  const data = await res.json();
-  if (!res.ok || !data.ok) throw new Error(data.error || "No se pudo guardar. Reintentá.");
-  return data;
+  const partida = window.partidaId;
+  const resultado = await BaseDatos.operar(ruta, datos);
+  if (partida !== window.partidaId) throw new Error("La partida cambió durante la operación.");
+  return resultado;
 }
 async function agregarPez(pez) {
   const ejemplar = { ...pez, pez_id: obtenerIdPez(pez.nombre), precio: calcularPrecio(pez) };

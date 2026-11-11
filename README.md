@@ -14,25 +14,21 @@ python3 -m http.server 8000
 
 Abrí **http://localhost:8000** y elegí **Jugar sin cuenta**. La partida de invitado se guarda en este navegador. Se puede pescar, vender, comprar/equipar la caña, consultar la enciclopedia y usar la guía local. Las cuentas requieren la instalación completa de abajo. No abras `index.html` directamente con `file://`.
 
-## Jugar con cuentas y base de datos
+## Jugar con cuentas de Supabase
 
-Requiere Docker y Docker Compose:
+El juego usa **Supabase Auth + PostgreSQL**, conectado al proyecto `kzjdaobtjzrpqwtjcjfx`. Ya no necesita PHP ni MariaDB.
+
+El propietario debe ejecutar una vez [`supabase/instalar.sql`](supabase/instalar.sql) en el SQL Editor de Supabase. La [guía de configuración](supabase/README.md) explica la instalación, la confirmación de email y las direcciones de redirección.
+
+Después, el mismo servidor estático del modo invitado permite crear cuentas e iniciar sesión con **email y contraseña**. El dinero, la caña, las capturas, la enciclopedia y la mochila se guardan en Supabase. La clave de `config.js` es pública; los permisos se aplican en la base de datos.
+
+Opcionalmente se puede servir el juego con Docker:
 
 ```sh
-cp .env.example .env
-# Editá las dos contraseñas de .env antes de continuar.
 docker compose up --build -d
 ```
 
-Abrí **http://localhost:8080**. Compose crea MariaDB, importa las nueve especies y levanta Apache con PHP 8.3 y PDO MySQL. La base se conserva en el volumen `partida`.
-
-```sh
-docker compose down
-```
-
-Detiene los servicios y conserva las partidas. No agregues `-v` si querés conservarlas. Las importaciones automáticas ocurren solamente cuando se crea una base vacía.
-
-También se puede usar Apache/PHP 8.1+ con PDO MySQL y MySQL/MariaDB. Creá `bluehaven_db`, importá en orden `bd/bluehaven_db.sql`, `bd/datos_peces.sql` y `bd/002_integracion.sql`, y configurá `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` en el entorno de PHP. `002_integracion.sql` se ejecuta **una sola vez**; para una instalación previa, hacé un respaldo e importá únicamente esa migración si ya tenés los dos primeros archivos. El SQL antiguo `bluehaven.sql` está conservado en `docs/legacy/` y no se utiliza.
+Abrí `http://localhost:8080`. Este contenedor solo sirve archivos; los datos están en tu proyecto de Supabase.
 
 ## Controles
 
@@ -75,10 +71,10 @@ npm ci
 npm test
 npx playwright install chromium
 npm run test:browser
-npm run test:api
+npm run test:supabase
 ```
 
-Las dos últimas pruebas usan `http://127.0.0.1:8080`; se puede cambiar con `TEST_URL`. La prueba de API crea cuentas y capturas de prueba: usala sobre una base de desarrollo. Para usar Chromium ya instalado: `CHROMIUM_PATH=/ruta/a/chromium npm run test:browser`.
+La prueba de navegador usa `http://127.0.0.1:8080`; se puede cambiar con `TEST_URL`. Para comprobar la base ejecutá `npm run test:supabase`: levanta un stack local de pruebas con Auth, PostgreSQL y PostgREST. `test:api` requiere `SUPABASE_TEST_URL` y `SUPABASE_TEST_ANON_KEY` de ese stack y crea cuentas de prueba; no utiliza el proyecto alojado. Para usar Chromium ya instalado: `CHROMIUM_PATH=/ruta/a/chromium npm run test:browser`.
 
 `npm run optimize:shop -- entrada.glb salida.glb` reproduce la optimización de modelos. El archivo integrado ya está optimizado; usá como entrada el original al repetir el proceso.
 
@@ -87,3 +83,7 @@ Las dos últimas pruebas usan `http://127.0.0.1:8080`; se puede cambiar con `TES
 Es un juego de un jugador. El servidor valida especies, precios, propiedad del inventario y saldo, pero el resultado del minijuego y la tirada de calidad todavía se originan en el cliente; no es un sistema antitrampas para rankings competitivos. Las cuentas requieren conexión para guardar capturas y efectuar compras/ventas. El invitado funciona de forma independiente y no se importa automáticamente a una cuenta.
 
 Las nueve especies combinan contenido real y fantasía del prototipo. Las especies marinas se pueden capturar en el lago; los biomas y la selección de equipamiento por hábitat quedan para otra etapa.
+
+## Integración actual de Supabase
+
+`base-datos.js` concentra el acceso a Auth y las funciones RPC. Las políticas RLS aíslan las cuentas; las funciones de PostgreSQL calculan precios y ejecutan ventas/compras en transacciones. El catálogo del usuario se descarga de Supabase y también alimenta la enciclopedia y la guía. El modo invitado sigue usando su partida local independiente. Ver [instalación](supabase/README.md) y [validación](docs/VALIDACION.md).

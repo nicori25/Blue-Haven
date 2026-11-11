@@ -81,50 +81,19 @@ async function preguntar(texto) {
   mensajeCargando();
   inputChat.value = "";
 
-  if (window.modoInvitado) {
-    const normalizar = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const pregunta = normalizar(texto);
-    const pez = ENCICLOPEDIA.peces.find(p => pregunta.includes(normalizar(p.nombre)));
-    const respuesta = pez ? `${pez.nombre}\n${pez.descripcion}\nHábitat: ${pez.habitat}\nCebo: ${pez.ceboRecomendado}\n${pez.datoCurioso}` :
-      'Podés preguntarme por: ' + ENCICLOPEDIA.peces.map(p => p.nombre).join(', ') + '. Usá F para pescar, I para la mochila y L para la enciclopedia.';
-    quitarCargando(); agregarMensaje('bot', respuesta); chatEnviando = false; inputChat.focus(); return;
-  }
-  let res;
-  try {
-    res = await fetch("api/chatbot.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pregunta: texto }),
-    });
-  } catch (errRed) {
-    quitarCargando();
-    agregarMensaje("bot", "No pude conectar con el servidor.", true);
-    chatEnviando = false;
-    inputChat.focus();
-    return;
-  }
-
-  const textoRespuesta = await res.text();
-  let data = null;
-  try {
-    data = JSON.parse(textoRespuesta);
-  } catch (errJson) {
-    data = null;
-  }
+  const normalizar = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const pregunta = normalizar(texto);
+  const pez = ENCICLOPEDIA.peces.find(p => pregunta.includes(normalizar(p.nombre)));
+  const respuesta = pez ? `${pez.nombre}\n${pez.descripcion}\nHábitat: ${pez.habitat}\nCebo: ${pez.ceboRecomendado}\n${pez.datoCurioso || ''}` :
+    'Podés preguntarme por: ' + ENCICLOPEDIA.peces.map(p => p.nombre).join(', ') + '. Usá F para pescar, I para la mochila y L para la enciclopedia.';
   quitarCargando();
-
-  if (!res.ok || !data || !data.ok) {
-    const detalle =
-      (data && data.error) ||
-      (textoRespuesta || "").trim().slice(0, 300) ||
-      "Ups, no pude responder. Probá de nuevo.";
-    agregarMensaje("bot", "Error (" + res.status + "):\n" + detalle, true);
-  } else {
-    agregarMensaje("bot", data.respuesta || "…");
-  }
-
+  agregarMensaje('bot', respuesta);
   chatEnviando = false;
   inputChat.focus();
+  if (!window.modoInvitado) {
+    try { await BaseDatos.registrarPregunta(texto, respuesta); }
+    catch (err) { console.warn('No se pudo guardar la consulta de la guía:', err.message); }
+  }
 }
 
 function crearSugerencias() {
@@ -143,7 +112,7 @@ function saludarChat() {
   document.body.classList.add("chat-saludado");
   agregarMensaje(
     "bot",
-    "¡Hola! Soy tu guía de pesca 🎣\nPreguntame por una especie y te paso los datos de la base.",
+    "¡Hola! Soy tu guía de pesca 🎣\nPreguntame por una especie y te cuento cómo encontrarla.",
   );
 }
 
