@@ -82,7 +82,7 @@ class Jugador {
     // Detectar tecla Control (keyCode 17) para agacharse
     this.agachado = keyIsDown(17) || keyIsDown(CONTROL);
     const objetivoAgachado = this.agachado ? 1 : 0;
-    this.factorAgachado = THREE.MathUtils.lerp(this.factorAgachado, objetivoAgachado, 0.2);
+    this.factorAgachado = lerp(this.factorAgachado, objetivoAgachado, 0.2);
 
     // Bloquear movimiento mientras la enciclopedia está abierta
     if (typeof ENCICLOPEDIA !== 'undefined' && ENCICLOPEDIA.abierta) return;

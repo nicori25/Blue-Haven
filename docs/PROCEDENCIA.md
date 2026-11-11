@@ -27,3 +27,7 @@ La tienda original se optimizó con glTF Transform y Sharp, sin cambiar su geome
 ## Migración a Supabase
 
 La versión actual reemplaza la API PHP y MariaDB de esta integración por el SDK oficial `@supabase/supabase-js` (MIT), Supabase Auth y funciones PostgreSQL. El SDK se empaqueta localmente mediante esbuild; su aviso de licencia está en `libraries/SUPABASE-LICENSE.txt`. Los SQL originales de MySQL se conservan en `docs/legacy/mysql/` como referencia histórica.
+
+## Rama p5.js WEBGL
+
+`version/p5-webgl` reemplaza el renderizado de Three.js por p5.js WEBGL y retira Three.js y sus loaders de esta rama. El conversor de desarrollo usa glTF Transform, no Three.js, y exporta la geometría y las texturas de los modelos existentes a OBJ. La tienda conserva su geometría; las cañas se orientan en un sistema local para animarlas con transformaciones de p5.js. El vendedor se separa por material para usar sus texturas originales. Se mantienen los créditos y las licencias de los recursos.

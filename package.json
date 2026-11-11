@@ -12,7 +12,9 @@
     "configure:supabase": "node scripts/configurar-supabase.cjs",
     "db:seed": "node scripts/generar-semilla.cjs",
     "test:supabase": "sh scripts/probar-supabase.sh",
-    "test:browser:supabase": "node tests/supabase-browser.cjs"
+    "test:browser:supabase": "node tests/supabase-browser.cjs",
+    "convert:models:p5": "node scripts/convertir-modelos-p5.mjs",
+    "test:controls:p5": "node tests/p5-controls.cjs"
   },
   "engines": {
     "node": ">=20"

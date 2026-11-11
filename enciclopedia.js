@@ -19,8 +19,8 @@ function cerrarEnciclopedia() {
   ENCICLOPEDIA.abierta = false;
   ENCICLOPEDIA.hover = -1;
   ENCICLOPEDIA.hoverBoton = "";
-  if (typeof renderizador3D !== "undefined" && renderizador3D) {
-    renderizador3D.domElement.style.cursor = "";
+  if (typeof lienzoJuego !== "undefined" && lienzoJuego) {
+    lienzoJuego.elt.style.cursor = "";
   }
 }
 
@@ -60,8 +60,8 @@ function actualizarHoverEnciclopedia(x, y) {
 
   ENCICLOPEDIA.hover = hover;
   ENCICLOPEDIA.hoverBoton = hoverBoton;
-  if (typeof renderizador3D !== "undefined" && renderizador3D) {
-    renderizador3D.domElement.style.cursor =
+  if (typeof lienzoJuego !== "undefined" && lienzoJuego) {
+    lienzoJuego.elt.style.cursor =
       hover >= 0 || hoverBoton ? "pointer" : "default";
   }
 }

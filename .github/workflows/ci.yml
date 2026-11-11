@@ -1,4 +1,4 @@
-name: Verificar juego con Supabase
+name: Verificar versión p5.js y Supabase
 on:
   push:
   pull_request:
@@ -17,11 +17,14 @@ jobs:
       - run: git diff --exit-code -- libraries/supabase.min.js
       - run: npm run db:seed
       - run: git diff --exit-code -- supabase/seed.sql supabase/instalar.sql
+      - run: npm run convert:models:p5
+      - run: git diff --exit-code -- models/p5
       - run: npm test
       - run: npx playwright install --with-deps chromium
       - run: npm run test:supabase
       - run: python3 -m http.server 8080 > /tmp/bluehaven-web.log 2>&1 &
       - run: npm run test:browser
+      - run: npm run test:controls:p5
       - name: Probar cuentas en navegador con Supabase local
         run: |
           export SUPABASE_TEST_URL=http://127.0.0.1:54321

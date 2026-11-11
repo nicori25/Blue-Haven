@@ -38,3 +38,18 @@ Pruebas del nuevo backend ejecutadas sobre servicios reales de Supabase Auth (Go
 En el proyecto alojado se verificaron la URL y la clave pública y la configuración de Auth. La consulta a `bh_estado` informó que la función todavía no existe: la instalación de `supabase/instalar.sql` debe ejecutarla el propietario en el panel. La clave pública no permite crear el esquema; no se utilizaron credenciales administrativas ni se registraron cuentas de prueba en el proyecto alojado.
 
 También pasó la prueba de navegador contra el stack local real: registro desde el formulario, captura/venta/compra, recarga con sesión recuperada y saldo/caña persistentes, cierre de sesión, invitado con progreso separado y nuevo inicio de sesión por email. La prueba de invitado y las cinco pruebas de lógica siguieron aprobadas.
+
+# Rama independiente p5.js WEBGL
+
+La rama `version/p5-webgl` conserva Supabase y reemplaza completamente el motor de dibujo de `main`. Las bibliotecas Three.js y sus loaders se retiraron de esta rama. El navegador carga OBJ y texturas mediante p5.js; no descarga GLB/glTF.
+
+Validación de esta variante en Chromium, viewport 960 × 540, renderizado por software:
+
+- Ocho pruebas de lógica y geometría aprobadas: economía, aislamiento de partidas, límite de mochila, errores de red, alturas, paredes y archivos convertidos.
+- Mundo p5.WEBGL confirmado mediante el contexto WebGL real. `THREE` no existe en el navegador. Se observan 23 geometrías de terreno y 45 lotes de modelos en la vista inicial; el contador incluye modelos, no cada llamada interna de GPU de p5.js.
+- Pruebas de teclado WASD, captura del mouse, movimiento de cámara, lanzamiento real al agua, recogida, selección de la caña de la tienda, compra y cambio de tamaño de ventana.
+- Interfaz, guía, enciclopedia, las cinco familias de minijuegos y progreso de invitado comprobados.
+- Registro, economía, restauración de sesión, cierre de sesión, separación del invitado y nuevo inicio de sesión comprobados en navegador contra Supabase Auth/PostgreSQL/PostgREST locales reales.
+- Capturas del lago durante la pesca y del interior de la tienda inspeccionadas visualmente. Se corrigieron las normales de los OBJ y se reinician las luces del buffer p5.Graphics por fotograma para evitar acumulaciones de iluminación.
+
+Los materiales de esta rama usan color base y luces de p5.js. No reproducen los mapas PBR de Three.js. No se midieron FPS en el equipo del usuario ni se realizó una partida manual hasta completar todas las especies.

@@ -3,8 +3,8 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
 const page=await browser.newPage({viewport:{width:960,height:540}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(process.env.TEST_URL||'http://127.0.0.1:8080');await page.waitForFunction(()=>window.juegoPreparado);
 await page.click('#boton-invitado');await page.waitForFunction(()=>document.body.classList.contains('jugando'));await page.evaluate(()=>{BIENVENIDA.activa=false;BIENVENIDA._saliendo=false});
-await page.waitForFunction(()=>!!TIENDA.objetoMundo);await page.waitForTimeout(500);
-const stats=await page.evaluate(()=>({calls:renderizador3D.info.render.calls,terrain:escena3D.children.filter(o=>o.name.startsWith('terreno-')).length}));assert.ok(stats.terrain<40);assert.ok(stats.calls<150);console.log('Render:',stats);
+await page.waitForFunction(()=>TIENDA.lista);await page.waitForTimeout(500);
+const stats=await page.evaluate(()=>({calls:estadisticasRender.dibujos,terrain:lotesTerreno.length,motor:estadisticasRender.motor,sinThree:typeof THREE==='undefined',webgl:mundoP5.drawingContext instanceof WebGL2RenderingContext||mundoP5.drawingContext instanceof WebGLRenderingContext}));assert.equal(stats.sinThree,true);assert.equal(stats.webgl,true);assert.equal(stats.motor,'p5.js WEBGL');assert.ok(stats.terrain<40);assert.ok(stats.calls<150);console.log('Render:',stats);assert.equal(await page.evaluate(()=>Object.values(modelosP5).flat().every(p=>p.geometria.vertexNormals.some(n=>n.magSq()>.5))),true);
 const dir=process.env.SCREENSHOT_DIR||'test-results';fs.mkdirSync(dir,{recursive:true});await page.screenshot({path:dir+'/juego.png'});
 await page.click('#boton-chat');await page.locator('#chat-input').fill('¿Dónde vive el Atún?');await page.locator('#chat-form').evaluate(f=>f.requestSubmit());assert.match(await page.locator('#chat-mensajes').innerText(),/océano/);
 assert.equal(await page.evaluate(()=>{const old=keyIsDown;window.keyIsDown=k=>k===87;const x=jugador.posicion.x;jugador.actualizar();window.keyIsDown=old;return jugador.posicion.x===x}),true);await page.click('#chat-cerrar');

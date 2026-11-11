@@ -1,4 +1,6 @@
-# 🎣 Blue Haven
+# 🎣 Blue Haven — versión p5.js WEBGL
+
+Rama independiente `version/p5-webgl`: el mundo 3D, la cámara, los modelos, la pesca y la interfaz se dibujan con **p5.js**. Esta versión no carga Three.js. `main` conserva la versión anterior.
 
 Juego de pesca 3D educativo para navegador. Explorá el lago, capturá nueve especies, superá cinco familias de minijuegos, vendé tus capturas y mejorá tu caña.
 
@@ -50,9 +52,9 @@ La caña de bambú se compra por $150 al hacer clic en su exhibición dentro de 
 
 ## Mejoras incluidas
 
-- Terreno con `InstancedMesh`: 23 grupos en lugar de una malla por cada celda.
+- Terreno agrupado en 23 `p5.Geometry`, dibujadas con `model()`, en lugar de una llamada por baldosa.
 - Tienda reducida de **45.561.576 a aproximadamente 1.000.000 bytes**, con texturas WebP de hasta 512 px. Se conserva la geometría del edificio.
-- Bibliotecas Three.js locales; el arranque ya no depende de un CDN. Fuentes del sistema.
+- p5.js y el SDK de Supabase locales; el arranque no depende de un CDN. Fuentes del sistema.
 - Calidad gráfica baja/media/alta, contador opcional de rendimiento y pausa al ocultar la pestaña.
 - Movimiento ajustado al tiempo transcurrido; chat y ajustes bloquean los controles.
 - Catálogo compartido para pesca, enciclopedia y guía de invitado; Pez Globo agregado a la base.
@@ -87,3 +89,16 @@ Las nueve especies combinan contenido real y fantasía del prototipo. Las especi
 ## Integración actual de Supabase
 
 `base-datos.js` concentra el acceso a Auth y las funciones RPC. Las políticas RLS aíslan las cuentas; las funciones de PostgreSQL calculan precios y ejecutan ventas/compras en transacciones. El catálogo del usuario se descarga de Supabase y también alimenta la enciclopedia y la guía. El modo invitado sigue usando su partida local independiente. Ver [instalación](supabase/README.md) y [validación](docs/VALIDACION.md).
+
+## Cómo está hecha esta rama con p5.js
+
+- `sketch.js`: `preload()`, `setup()` y `draw()` del juego; interfaz 2D, controles y estados de pesca.
+- `mundo-p5.js`: un buffer `createGraphics(..., WEBGL)`, cámara con `camera()` y `perspective()`, iluminación, `loadModel()`, `texture()` y `model()`. El buffer se compone con `image()` en el canvas 2D para mantener la interfaz y los cinco minijuegos originales.
+- `terreno.js`: selección de baldosas y composición de sus texturas.
+- `tienda.js`: colisiones del OBJ mediante triángulos, alturas y distancias a segmentos.
+- `jugador.js`: movimiento y vectores de p5.js.
+- `models/p5/`: tienda y cañas convertidas a OBJ por material; vendedor con sus texturas originales. El árbol conserva su OBJ original.
+
+Las geometrías originales se conservan. p5.js usa sus materiales iluminados y texturas de color base; el aspecto de iluminación cambia respecto de los materiales PBR de la versión anterior. Supabase y sus tablas son los mismos: **no hay que ejecutar otra migración SQL para cambiar de rama**.
+
+Para regenerar los modelos: `npm run convert:models:p5`. Para verificar controles, cámara, lanzamiento y compra: `npm run test:controls:p5` (con el servidor del juego abierto).

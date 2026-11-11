@@ -1,0 +1,21 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');const fs=require('node:fs');
+(async()=>{const browser=await chromium.launch({...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});try{
+ const p=await browser.newPage({viewport:{width:960,height:540}});p.setDefaultTimeout(60000);const errors=[],requests=[];p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>requests.push(r.url()));
+ await p.goto(process.env.TEST_URL||'http://127.0.0.1:8080');await p.waitForFunction(()=>window.juegoPreparado);await p.click('#boton-invitado');await p.waitForFunction(()=>document.body.classList.contains('jugando'));
+ await p.evaluate(()=>{BIENVENIDA.activa=false;BIENVENIDA._saliendo=false});
+ const before=await p.evaluate(()=>jugador.posicion.y);await p.keyboard.down('w');await p.waitForTimeout(350);await p.keyboard.up('w');assert.ok(await p.evaluate(()=>jugador.posicion.y)<before);
+ await p.locator('canvas').first().click({position:{x:480,y:270}});await p.waitForFunction(()=>ratonBloqueado);const angle=await p.evaluate(()=>jugador.angulo);await p.mouse.move(520,270);assert.notEqual(await p.evaluate(()=>jugador.angulo),angle);await p.evaluate(()=>document.exitPointerLock());
+ await p.evaluate(()=>{jugador.posicion.set(TAMAÑO_CELDA*18.5,TAMAÑO_CELDA*27.5);jugador.angulo=-Math.PI/2;jugador.inclinacion=0});await p.keyboard.press('f');
+ assert.equal(await p.evaluate(()=>estadoLanzamiento),'lanzando');assert.equal(await p.evaluate(()=>lanzamientoCaeEnAgua),true);
+ await p.evaluate(()=>{const dt=deltaTime;deltaTime=50;for(let i=0;i<40;i++)actualizarLanzamientoAnzuelo();deltaTime=dt});assert.equal(await p.evaluate(()=>estadoLanzamiento),'en_agua');
+ const pos=await p.evaluate(()=>posicionAnzueloMundo.array());assert.ok(pos.every(Number.isFinite));
+ await p.waitForTimeout(200);const dir=process.env.SCREENSHOT_DIR||'test-results';fs.mkdirSync(dir,{recursive:true});await p.screenshot({path:dir+'/p5-pesca.png'});
+ await p.keyboard.press('Escape');assert.equal(await p.evaluate(()=>estadoLanzamiento),'reposo');
+ await p.evaluate(()=>{const q=posicionExhibicion();jugador.posicion.set(q.x,q.z-90);jugador.angulo=Math.PI/2;jugador.inclinacion=Math.atan2(q.y-(44.8+tiendaAlturaPiso(q.x,q.z-90)),90);dinero=150});
+ assert.equal(await p.evaluate(()=>mirandoCañaTienda()),true);await p.locator('canvas').first().click({position:{x:480,y:270}});assert.equal(await p.evaluate(()=>menuTienda),'comprar_caña');
+ await p.keyboard.press('e');assert.equal(await p.evaluate(()=>tieneCañaBambu),true);assert.equal(await p.evaluate(()=>dinero),0);assert.equal(await p.evaluate(()=>cañaEquipada),'bambu');
+ await p.evaluate(()=>{jugador.posicion.set(TAMAÑO_CELDA*30,TAMAÑO_CELDA*18);jugador.angulo=Math.PI/2;jugador.inclinacion=0});await p.waitForTimeout(250);await p.screenshot({path:dir+'/p5-tienda.png'});
+ await p.setViewportSize({width:720,height:480});await p.waitForFunction(()=>width===720);assert.equal(await p.evaluate(()=>width),720);assert.ok(await p.evaluate(()=>mundoP5.width)<720);
+ assert.ok(requests.every(u=>!(/three\.min|GLTFLoader|OBJLoader|MTLLoader|\.glb($|\?)|\.gltf($|\?)/.test(u))));assert.deepEqual(errors,[]);
+ console.log('Controles p5: WASD, pointer lock, cámara, lanzamiento al agua, recogida, compra en tienda y resize OK');
+}finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});
