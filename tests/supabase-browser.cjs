@@ -35,7 +35,11 @@ if (!url || !key || !['localhost','127.0.0.1'].includes(new URL(url).hostname)) 
     await page.click('#boton-logout'); await page.waitForFunction(()=>!document.body.classList.contains('jugando'));
     await page.fill('#login-usuario',email); await page.fill('#login-password','test-pass-123');
     await page.locator('#form-login button[type=submit]').click(); await page.waitForFunction(()=>document.body.classList.contains('jugando'));
-    assert.equal(await page.evaluate(()=>dinero),774); assert.deepEqual(errors,[]);
+    assert.equal(await page.evaluate(()=>dinero),774);
+    await page.evaluate(async()=>{await comprarProducto('precision');await equiparProducto('precision');await comprarProducto('lombriz');await equiparProducto('lombriz');efectosLance=await prepararEquipoLance()});
+    assert.equal(await page.evaluate(()=>efectosLance.enganche),.15);
+    await page.reload();await page.waitForFunction(()=>document.body.classList.contains('jugando'));
+    assert.equal(await page.evaluate(()=>dinero),649);assert.equal(await page.evaluate(()=>objetosPesca.lombriz),4);assert.equal(await page.evaluate(()=>equipoPesca.anzuelo),'precision');assert.deepEqual(errors,[]);
     console.log('Navegador Supabase: registro, economía, restauración de sesión, logout, invitado y login OK');
   } finally { await browser.close(); }
 })().catch(e=>{console.error(e);process.exitCode=1});

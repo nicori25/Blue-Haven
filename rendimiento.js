@@ -9,7 +9,7 @@ try { Object.assign(opcionesGraficas, JSON.parse(localStorage.getItem('BLUEHAVEN
 let muestrasFPS = [];
 let ultimoIndicador = 0;
 function interfazBloqueada() {
-  return !document.body.classList.contains('jugando') || !!window.chatAbierto || !!document.getElementById('ajustes')?.open;
+  return !document.body.classList.contains('jugando') || !!window.chatAbierto || !!document.getElementById('ajustes')?.open || !!document.getElementById('comercio')?.open;
 }
 function aplicarCalidadGrafica() {
   const config = OPCIONES_GRAFICAS[opcionesGraficas.calidad] || OPCIONES_GRAFICAS.media;

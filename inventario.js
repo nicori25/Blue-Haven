@@ -35,6 +35,7 @@ function precioDe(pez) {
 function mostrarMensaje(texto) {
   mensajeHUD = texto;
   timerMensaje = 3000;
+  if(typeof dialogoComercio!=='undefined' && dialogoComercio.open) mensajeComercio(texto);
 }
 
 // Busca el id real (de la base) de un pez por nombre, usando el catálogo
@@ -87,7 +88,7 @@ async function venderPez(indice) {
     inventario.splice(inventario.indexOf(pez), 1);
     mostrarMensaje("Vendiste " + pez.nombre + " por $" + precio);
     guardarProgresoLocal(); estadoGuardado("Progreso guardado");
-  } catch (e) { estadoGuardado(e.message); }
+  } catch (e) { estadoGuardado(e.message); if(typeof mensajeComercio==='function')mensajeComercio(e.message,true); }
   finally { operacionInventario = false; }
 }
 async function venderTodos() {
@@ -101,25 +102,19 @@ async function venderTodos() {
     inventario.length = 0;
     mostrarMensaje("Vendiste todo por $" + total);
     guardarProgresoLocal(); estadoGuardado("Progreso guardado");
-  } catch (e) { estadoGuardado(e.message); }
+  } catch (e) { estadoGuardado(e.message); if(typeof mensajeComercio==='function')mensajeComercio(e.message,true); }
   finally { operacionInventario = false; }
 }
 
 function abrirMenuTienda() {
-  if (inventario.length === 0) {
-    mostrarMensaje("No tenés peces para vender.");
-    return;
-  }
-  menuTienda = "tienda";
-  if (document.pointerLockElement) document.exitPointerLock();
+  if (!cercaDeTienda()) return;
+  if (!entrarALaTienda()) { mostrarMensaje("No se pudo encontrar un lugar libre en la tienda."); return; }
+  abrirComercio('tienda');
 }
-
-function abrirMenuInventario() {
-  menuTienda = "inventario";
-  if (document.pointerLockElement) document.exitPointerLock();
-}
+function abrirMenuInventario() { abrirComercio('equipo'); }
 
 function cerrarMenu() {
+  if (typeof dialogoComercio!=='undefined' && dialogoComercio.open) dialogoComercio.close();
   menuTienda = "cerrado";
 }
 
@@ -183,7 +178,7 @@ function dibujarIndicadorTienda() {
   textAlign(CENTER, CENTER);
   textSize(16);
   text(
-    inventario.length > 0 ? "[E]  Vender peces en la tienda" : "[E]  Tienda",
+    "[E]  Entrar · Comprar / Vender",
     width / 2,
     height * 0.85 - 2,
   );
@@ -431,53 +426,12 @@ let tieneCañaBambu = false;
 let cañaEquipada = "basica";
 
 // Cambia la caña que se sostiene (solo si se tiene). Se llama desde el inventario.
-function seleccionarCaña(tipo) {
-  if (tipo === "bambu" && !tieneCañaBambu) {
-    mostrarMensaje("Todavía no tenés la Caña de Bambú.");
-    return;
-  }
-  if (cañaEquipada === tipo) return;
-  cañaEquipada = tipo;
-  if (typeof equiparCaña === "function") equiparCaña(tipo);
-  mostrarMensaje(
-    tipo === "bambu" ? "Equipaste la Caña de Bambú." : "Equipaste la Caña básica.",
-  );
-  if (typeof guardarProgresoLocal === "function") guardarProgresoLocal();
-}
-
-function abrirMenuComprarCaña() {
-  menuTienda = "comprar_caña";
-  if (document.pointerLockElement) document.exitPointerLock();
-}
-
+function seleccionarCaña(tipo) { return equiparProducto(tipo); }
+function abrirMenuComprarCaña() { abrirMenuTienda(); comercio.pagina='comprar'; comercio.categoria='cana'; renderizarComercio(); }
 async function comprarCañaTienda() {
-  if (operacionInventario) return;
-  if (tieneCañaBambu) {
-    mostrarMensaje("Ya tenés la Caña de Bambú.");
-    cerrarMenu();
-    return;
-  }
-  if (dinero < PRECIO_CAÑA_TIENDA) {
-    mostrarMensaje(
-      "No tenés suficiente dinero ($" + PRECIO_CAÑA_TIENDA + " necesarios).",
-    );
-    return;
-  }
-  operacionInventario = true;
-  try {
-    if (window.modoInvitado) dinero -= PRECIO_CAÑA_TIENDA;
-    else { const data = await apiJuego("comprar_cana"); dinero = Number(data.dinero); }
-  } catch (e) { estadoGuardado(e.message); return; }
-  finally { operacionInventario = false; }
-  tieneCañaBambu = true;
-  // Al comprarla reemplaza a la caña que se tenía en la mano
-  cañaEquipada = "bambu";
-  mostrarMensaje(
-    "¡Compraste la Caña de Bambú por $" + PRECIO_CAÑA_TIENDA + "!",
-  );
-  if (typeof equiparCaña === "function") equiparCaña("bambu");
-  if (typeof guardarProgresoLocal === "function") guardarProgresoLocal();
-  cerrarMenu();
+  if (cantidadObjeto('bambu')) { await equiparProducto('bambu'); return; }
+  await comprarProducto('bambu');
+  if (cantidadObjeto('bambu')) await equiparProducto('bambu');
 }
 
 function _rectPanelCompra() {

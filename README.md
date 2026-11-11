@@ -39,14 +39,25 @@ Abrí `http://localhost:8080`. Este contenedor solo sirve archivos; los datos es
 | Saltar / enganchar / pulso | Espacio |
 | Agacharte | Control |
 | Lanzar / recoger / arriesgar | F |
-| Vender en la tienda | E |
-| Mochila y equipar caña | I |
+| Entrar a la tienda: comprar y vender | E |
+| Mochila y equipamiento | I |
 | Enciclopedia | L |
 | Guía de pesca | Q o botón inferior derecho |
 | Salir de un panel / cancelar | Escape |
 | Ritmo | A/S/D o Z/X/C |
 
-La caña de bambú se compra por $150 al hacer clic en su exhibición dentro de la tienda. La bienvenida explica los minijuegos. El juego está pensado para escritorio con teclado y mouse.
+Acercate a la tienda y presioná E para entrar, incluso sin peces. Elegí Comprar o Vender; el panel permite seguir explorando el interior o salir. Con I podés cambiar tu equipo desde cualquier lugar.
+
+| Equipo | Precio | Efecto |
+|---|---|---|
+| Caña de bambú | $150 | Reduce 15 % la dificultad |
+| Caña de metal | $500 | Reduce 25 % la dificultad |
+| Lombrices, paquete de 5 | $35 | Reduce 30 % la espera |
+| Mariscos, paquete de 5 | $75 | Aumenta el peso de las especies raras en el sorteo |
+| Anzuelo de precisión | $90 | Agrega 0,15 segundos para enganchar |
+| Anzuelo reforzado | $200 | Reduce 10 % la dificultad |
+
+Las cañas y los anzuelos son permanentes. Se consume un cebo por lanzamiento al agua; al agotarse volvés al equipo sin cebo. Los efectos de la caña y el anzuelo se combinan. Las compras y el equipo de las cuentas se guardan en Supabase. La bienvenida explica los minijuegos. El juego está pensado para escritorio con teclado y mouse.
 
 ## Mejoras incluidas
 

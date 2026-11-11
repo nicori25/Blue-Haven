@@ -116,6 +116,8 @@ function claveProgreso() {
 }
 function reiniciarEstadoEnMemoria() {
   for (const k in REGISTRO_CAPTURAS) delete REGISTRO_CAPTURAS[k];
+  if(typeof TIENDA!=='undefined' && TIENDA.regreso) salirDeLaTienda();
+  if(typeof reiniciarEquipo==='function') reiniciarEquipo();
   inventario = []; dinero = 0; tieneCañaBambu = false; cañaEquipada = "basica";
 }
 function estadoGuardado(mensaje) {
@@ -126,6 +128,8 @@ function estadoGuardado(mensaje) {
 function guardarProgresoLocal() {
   try {
     const datos = {
+      equipoPesca: typeof equipoPesca!=='undefined'?equipoPesca:null,
+      objetosPesca: typeof objetosPesca!=='undefined'?objetosPesca:null,
       registro: REGISTRO_CAPTURAS,
       dinero: typeof dinero !== "undefined" ? dinero : 0,
       inventario: typeof inventario !== "undefined" ? inventario : [],
@@ -165,11 +169,18 @@ function cargarProgresoLocal() {
       ) {
         tieneCañaBambu = datos.tieneCañaBambu;
       }
-      if (typeof cañaEquipada !== "undefined") {
-        // Solo se puede equipar la de bambú si se tiene
-        cañaEquipada =
-          datos.cañaEquipada === "bambu" && tieneCañaBambu ? "bambu" : "basica";
+      if (window.modoInvitado && typeof equipoPesca !== 'undefined') {
+        if(datos.objetosPesca && datos.equipoPesca){
+          for(const producto of PRODUCTOS_TIENDA) objetosPesca[producto.id]=Math.max(0,Math.floor(Number(datos.objetosPesca[producto.id])||0));
+          objetosPesca.basica=1;objetosPesca.sin_cebo=1;objetosPesca.simple=1;
+          for(const categoria of ['cana','cebo','anzuelo']){
+            const id=datos.equipoPesca[categoria];
+            if(productoDe(id)?.categoria===categoria && cantidadObjeto(id)>0)equipoPesca[categoria]=id;
+          }
+        } else if(datos.tieneCañaBambu){objetosPesca.bambu=1;equipoPesca.cana=datos.cañaEquipada==='bambu'?'bambu':'basica';}
+        sincronizarEquipoVisual();
       }
+
     }
   } catch (e) {
     console.warn("No se pudo cargar progreso de localStorage:", e);

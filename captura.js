@@ -1,10 +1,11 @@
 const PECES_CAPTURA = CATALOGO_ESPECIES;
 
 function elegirPezAleatorio() {
-  const total = PECES_CAPTURA.reduce((suma, pez) => suma + (pez.pesoSeleccion || 1), 0);
+  const peso = pez => (pez.pesoSeleccion || 1) * (1+(efectosLance.atraccion||0)*(pez.rareza-1));
+  const total = PECES_CAPTURA.reduce((suma, pez) => suma + peso(pez), 0);
   let tirada = random(total);
   for (const pez of PECES_CAPTURA) {
-    tirada -= pez.pesoSeleccion || 1;
+    tirada -= peso(pez);
     if (tirada <= 0) return pez;
   }
   return PECES_CAPTURA[0];
@@ -42,14 +43,15 @@ class SistemaCaptura {
     this.pez = Object.assign({}, pez, {
       calidadId: calidad.id,
       multiplicadorCalidad: calidad.multiplicador,
-      escalaDificultad: 1,
+      escalaDificultad: efectosLance.dificultad,
       capturaRiesgo: false,
       precio: 0,
       mecanicasActivas: [],
     });
 
     this.estado = "esperando_mordida";
-    this.timerEspera = random(3, 8);
+    this.timerEspera = random(3, 8) * efectosLance.espera;
+    this.ventanaTiming = 0.4 + efectosLance.enganche;
     this.tiempoAnim = 0;
     this.resultadoEnganche = "";
     this.screenshake = 0;
@@ -83,7 +85,7 @@ class SistemaCaptura {
     const calidad = calidadDe(this.pez);
     this.riesgo = !!arriesgar;
     this.pez.capturaRiesgo = this.riesgo;
-    this.pez.escalaDificultad = this.riesgo ? calidad.escalaDificultad : 1;
+    this.pez.escalaDificultad = (this.riesgo ? calidad.escalaDificultad : 1) * efectosLance.dificultad;
     this.pez.mecanicasActivas = calcularMecanicas(this.pez, this.riesgo);
     this._crearMinijuego();
   }

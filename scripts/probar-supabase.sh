@@ -14,5 +14,9 @@ installed=$(docker compose -p "$project_name" -f "$compose_file" exec -T db psql
 if [ "$installed" != t ]; then
   docker compose -p "$project_name" -f "$compose_file" exec -T db psql -U postgres -v ON_ERROR_STOP=1 < supabase/instalar.sql
 fi
+shop_installed=$(docker compose -p "$project_name" -f "$compose_file" exec -T db psql -U postgres -tAc "select to_regclass('public.productos_pesca') is not null")
+if [ "$shop_installed" != t ]; then
+  docker compose -p "$project_name" -f "$compose_file" exec -T db psql -U postgres -v ON_ERROR_STOP=1 < supabase/migrations/20261111234025_tienda_equipamiento.sql
+fi
 docker compose -p "$project_name" -f "$compose_file" exec -T db psql -U postgres -c "NOTIFY pgrst, 'reload schema'"
 SUPABASE_TEST_URL=http://127.0.0.1:54321 SUPABASE_TEST_ANON_KEY="$(node tests/supabase/token.cjs)" npm run test:api

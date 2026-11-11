@@ -40,11 +40,15 @@
     },
     async salir() { verificar(await obtenerCliente().auth.signOut()); },
     async estado() { return rpc('bh_estado'); },
+    async estadoTienda() { return rpc('bh_tienda_estado'); },
     async operar(ruta, datos) {
       switch (ruta) {
         case 'guardar_captura': return rpc('bh_guardar_captura', {
           p_pez_id: datos.pez_id, p_calidad: datos.calidad, p_riesgo: datos.riesgo, p_token: datos.captura_token
         });
+        case 'comprar_producto': return rpc('bh_comprar_producto', { p_producto_id: datos.producto_id, p_token: datos.token });
+        case 'equipar_producto': return rpc('bh_equipar_producto', { p_producto_id: datos.producto_id });
+        case 'preparar_pesca': return rpc('bh_preparar_pesca');
         case 'vender': return rpc('bh_vender_pez', { p_inventario_id: datos.inventario_id });
         case 'vender_todos': return rpc('bh_vender_todos');
         case 'comprar_cana': return rpc('bh_comprar_cana');
