@@ -1,0 +1,6 @@
+* text=auto
+libraries/*.js -whitespace
+*.glb binary
+*.bin binary
+*.png binary
+*.gif binary
