@@ -90,10 +90,10 @@ Las nueve especies combinan contenido real y fantasía del prototipo. Las especi
 
 ## Publicación en GitHub Pages
 
-El workflow `Publicar main en GitHub Pages` publica exclusivamente la rama `main` en:
+GitHub Pages está configurado para publicar la rama `main`, carpeta raíz, en:
 
 https://nicori25.github.io/Blue-Haven/
 
-Solo se incluyen el HTML, CSS, JavaScript, bibliotecas y recursos del juego. Cada cambio en `main` vuelve a publicar; las ramas alternativas no reemplazan el sitio principal.
+El archivo `.nojekyll` permite servir directamente los archivos estáticos del repositorio. Cada cambio en `main` vuelve a publicar; las ramas alternativas no reemplazan el sitio principal.
 
 En Supabase → Authentication → URL Configuration, la dirección de producción debe ser `https://nicori25.github.io/Blue-Haven/` y la lista de redirecciones debe incluir `https://nicori25.github.io/Blue-Haven/**`, conservando las URLs de desarrollo que necesites. El cliente ya usa el origen y la ruta actuales al solicitar la confirmación del email.
