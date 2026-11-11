@@ -3,8 +3,8 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  const p=await browser.newPage({viewport:{width:960,height:540}});p.setDefaultTimeout(60000);const errors=[],requests=[];p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>requests.push(r.url()));
  await p.goto(process.env.TEST_URL||'http://127.0.0.1:8080');await p.waitForFunction(()=>window.juegoPreparado);await p.click('#boton-invitado');await p.waitForFunction(()=>document.body.classList.contains('jugando'));
  await p.evaluate(()=>{BIENVENIDA.activa=false;BIENVENIDA._saliendo=false});
- const before=await p.evaluate(()=>jugador.posicion.y);await p.keyboard.down('w');await p.waitForTimeout(350);await p.keyboard.up('w');assert.ok(await p.evaluate(()=>jugador.posicion.y)<before);
- await p.locator('canvas').first().click({position:{x:480,y:270}});await p.waitForFunction(()=>ratonBloqueado);const angle=await p.evaluate(()=>jugador.angulo);await p.mouse.move(520,270);assert.notEqual(await p.evaluate(()=>jugador.angulo),angle);await p.evaluate(()=>document.exitPointerLock());
+ const before=await p.evaluate(()=>jugador.posicion.y);await p.keyboard.down('w');await p.waitForFunction(y=>jugador.posicion.y<y,before);await p.keyboard.up('w');assert.ok(await p.evaluate(()=>jugador.posicion.y)<before);
+ await p.locator('canvas').first().click({position:{x:480,y:270}});await p.waitForFunction(()=>ratonBloqueado);const angle=await p.evaluate(()=>jugador.angulo);await p.mouse.move(560,290,{steps:4});await p.waitForFunction(a=>jugador.angulo!==a,angle);assert.notEqual(await p.evaluate(()=>jugador.angulo),angle);await p.evaluate(()=>document.exitPointerLock());
  await p.evaluate(()=>{jugador.posicion.set(TAMAÑO_CELDA*18.5,TAMAÑO_CELDA*27.5);jugador.angulo=-Math.PI/2;jugador.inclinacion=0});await p.keyboard.press('f');
  assert.equal(await p.evaluate(()=>estadoLanzamiento),'lanzando');assert.equal(await p.evaluate(()=>lanzamientoCaeEnAgua),true);
  await p.evaluate(()=>{const dt=deltaTime;deltaTime=50;for(let i=0;i<40;i++)actualizarLanzamientoAnzuelo();deltaTime=dt});assert.equal(await p.evaluate(()=>estadoLanzamiento),'en_agua');
