@@ -23,3 +23,7 @@ Se conservan los archivos `license.txt` en las carpetas de los modelos.
 - p5.js 1.10.0 y p5.sound: avisos originales conservados en `libraries/`.
 
 La tienda original se optimizó con glTF Transform y Sharp, sin cambiar su geometría visible: deduplicación, eliminación de recursos sin uso y texturas WebP de hasta 512 px.
+
+## Migración a Supabase
+
+La versión actual reemplaza la API PHP y MariaDB de esta integración por el SDK oficial `@supabase/supabase-js` (MIT), Supabase Auth y funciones PostgreSQL. El SDK se empaqueta localmente mediante esbuild; su aviso de licencia está en `libraries/SUPABASE-LICENSE.txt`. Los SQL originales de MySQL se conservan en `docs/legacy/mysql/` como referencia histórica.

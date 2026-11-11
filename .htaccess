@@ -5,4 +5,4 @@ Options -Indexes
 <FilesMatch "^(Dockerfile|LICENSE|\.git.*)$">
   Require all denied
 </FilesMatch>
-RedirectMatch 404 /(?:\.git|node_modules|tests|scripts|bd|docs)(?:/|$)
+RedirectMatch 404 /(?:\.git|node_modules|tests|scripts|supabase|bd|docs)(?:/|$)

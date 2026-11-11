@@ -20,3 +20,21 @@ El rendimiento real depende de GPU, navegador y resolución. El selector permite
 ## Pendiente
 
 No se hizo una partida manual completa hasta capturar todas las especies ni una medición en el equipo del usuario. La API verifica las operaciones de economía y su propietario; los resultados de minijuego y calidad siguen siendo del cliente, como corresponde al alcance actual de prototipo de un jugador.
+
+# Migración a Supabase — validación vigente
+
+La API PHP y MariaDB de la primera integración fueron reemplazadas por Supabase Auth, PostgreSQL, RLS y RPC. Las verificaciones de la sección anterior describen la versión histórica.
+
+Pruebas del nuevo backend ejecutadas sobre servicios reales de Supabase Auth (GoTrue 2.197), PostgreSQL 16 y PostgREST 14.18 en un stack local:
+
+- Registro y sesión mediante el SDK oficial de Supabase.
+- Perfil automático para cada usuario de Auth y catálogo de nueve especies.
+- Aislamiento entre dos cuentas con RLS; una cuenta no puede leer inventarios ajenos.
+- Escritura directa de saldo e inventario bloqueada; anónimos sin acceso al estado.
+- Capturas idempotentes, calidad y riesgo; mochila limitada a diez ejemplares y descubrimiento de la captura liberada.
+- Dos ventas simultáneas del mismo ejemplar: una sola acredita dinero.
+- Venta total, compra de caña persistente, consultas privadas de la guía y cierre de sesión.
+
+En el proyecto alojado se verificaron la URL y la clave pública y la configuración de Auth. La consulta a `bh_estado` informó que la función todavía no existe: la instalación de `supabase/instalar.sql` debe ejecutarla el propietario en el panel. La clave pública no permite crear el esquema; no se utilizaron credenciales administrativas ni se registraron cuentas de prueba en el proyecto alojado.
+
+También pasó la prueba de navegador contra el stack local real: registro desde el formulario, captura/venta/compra, recarga con sesión recuperada y saldo/caña persistentes, cierre de sesión, invitado con progreso separado y nuevo inicio de sesión por email. La prueba de invitado y las cinco pruebas de lógica siguieron aprobadas.
