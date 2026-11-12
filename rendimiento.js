@@ -120,8 +120,11 @@ function guardarAjustes() {
 document.getElementById('ajustes').addEventListener('input',guardarAjustes);
 document.getElementById('ajustes').addEventListener('change',guardarAjustes);
 document.getElementById('cerrar-ajustes').addEventListener('click',()=>{if(!cursorLibre)capturarCursor();});
+let teniaCursorCapturado=false;
 document.addEventListener('pointerlockchange',()=>{
-  if (!document.pointerLockElement && !cursorLibre && !interfazBloqueada() && !ENCICLOPEDIA.abierta) abrirAjustes();
+  const perdioCursor=teniaCursorCapturado&&!document.pointerLockElement;
+  teniaCursorCapturado=!!document.pointerLockElement;
+  if (perdioCursor && !cursorLibre && !interfazBloqueada() && !ENCICLOPEDIA.abierta) abrirAjustes();
 });
 document.addEventListener('keydown',e=>{
   if(!document.body.classList.contains('jugando'))return;
