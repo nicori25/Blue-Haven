@@ -444,3 +444,7 @@ body:not(.jugando) #panel-chat,
 #comercio footer { display:flex; justify-content:space-between; gap:12px; padding:16px 24px; border-top:1px solid #31515d; }
 .comercio-vender-todo { margin-top:16px; }
 @media(max-width:540px) { .comercio-cabecera { padding:18px; } .comercio-cabecera h2 { font-size:20px; } .comercio-producto { align-items:flex-start; flex-direction:column; } .comercio-producto-acciones { justify-content:flex-start; } .comercio-opciones { grid-template-columns:1fr; } #comercio footer { flex-wrap:wrap; } }
+
+#ajustes #boton-logout { position: static; margin-top: 16px; height: auto; background: #633938; }
+#volumen-general { width: 100%; accent-color: #87cfc5; }
+#valor-volumen { float: right; }

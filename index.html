@@ -99,12 +99,8 @@
       </div>
     </div>
 
-    <button id="boton-logout" type="button" style="display: none">
-      Cerrar sesión
-    </button>
-
     <div id="barra-juego" hidden><button id="boton-ajustes" type="button">⚙ Ajustes</button><span id="estado-guardado" aria-live="polite"></span></div>
-    <dialog id="ajustes"><form method="dialog"><h2>Ajustes del juego</h2><label>Calidad gráfica <select id="calidad-grafica"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option></select></label><label><input type="checkbox" id="mostrar-fps"> Mostrar rendimiento</label><p id="detalle-rendimiento"></p><p>WASD: moverte · Mouse: mirar · F: pescar · I: mochila · L: especies · Q: guía</p><button>Cerrar</button></form></dialog>
+    <dialog id="ajustes"><form method="dialog"><h2>Ajustes del juego</h2><label>Calidad gráfica <select id="calidad-grafica"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option></select></label><label><input type="checkbox" id="mostrar-fps"> Mostrar rendimiento</label><label for="volumen-general">Volumen <output id="valor-volumen">100%</output></label><input id="volumen-general" type="range" min="0" max="100" step="1"><label><input id="silenciar-audio" type="checkbox"> Silenciar</label><p id="detalle-rendimiento"></p><p>WASD: moverte · Mouse: mirar · F: pescar · I: mochila · L: especies · Q: guía · Esc: ajustes · P: liberar/capturar cursor</p><button id="cerrar-ajustes">Volver al juego</button><button id="boton-logout" type="button" style="display:none">Cerrar sesión</button></form></dialog>
     <!-- Chatbot: guía de pesca conectada a la base de datos -->
     <button
       id="boton-chat"

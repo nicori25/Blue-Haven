@@ -32,6 +32,7 @@ async function entrarConSesion(sesion, errorEl) {
 }
 formLogin.addEventListener('submit', async e => {
   e.preventDefault();
+  capturarCursor();
   const errorEl = document.getElementById('login-error'); errorEl.textContent = '';
   bloquearBotones(true);
   try {
@@ -42,6 +43,7 @@ formLogin.addEventListener('submit', async e => {
 });
 formRegistro.addEventListener('submit', async e => {
   e.preventDefault();
+  capturarCursor();
   const errorEl = document.getElementById('reg-error'); errorEl.textContent = '';
   bloquearBotones(true);
   try {
@@ -62,6 +64,7 @@ async function ocultarAuthYArrancar(errorEl) {
     }
     await iniciarJuego();
     pantallaAuth.style.display = 'none'; botonLogout.style.display = 'block';
+    cursorLibre=false;capturarCursor();
     document.body.classList.add('jugando'); document.getElementById('barra-juego').hidden = false;
     botonLogout.textContent = window.modoInvitado ? 'Salir de invitado' : 'Cerrar sesión';
   } catch (err) {
@@ -97,6 +100,7 @@ botonLogout.addEventListener('click', async () => {
 });
 document.getElementById('boton-invitado').addEventListener('click', async () => {
   if (entrando) return;
+  capturarCursor();
   window.partidaId++;
   window.modoInvitado = true; window.sesionUsuario = null;
   await ocultarAuthYArrancar(document.getElementById('login-error'));

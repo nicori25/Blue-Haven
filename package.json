@@ -13,7 +13,8 @@
     "db:seed": "node scripts/generar-semilla.cjs",
     "test:supabase": "sh scripts/probar-supabase.sh",
     "test:browser:supabase": "node tests/supabase-browser.cjs",
-    "test:shop": "node tests/shop-browser.cjs"
+    "test:shop": "node tests/shop-browser.cjs",
+    "test:settings": "node tests/settings-browser.cjs"
   },
   "engines": {
     "node": ">=20"
