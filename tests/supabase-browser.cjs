@@ -29,10 +29,10 @@ if (!url || !key || !['localhost','127.0.0.1'].includes(new URL(url).hostname)) 
     await page.reload(); await page.waitForFunction(()=>document.body.classList.contains('jugando'));
     assert.equal(await page.evaluate(()=>dinero),774); assert.equal(await page.evaluate(()=>tieneCañaBambu),true);
     assert.equal(await page.evaluate(()=>inventario.length),0);
-    await page.click('#boton-logout'); await page.waitForFunction(()=>!document.body.classList.contains('jugando'));
+    await page.keyboard.press('Escape');await page.click('#boton-logout'); await page.waitForFunction(()=>!document.body.classList.contains('jugando'));
     await page.click('#boton-invitado'); await page.waitForFunction(()=>document.body.classList.contains('jugando'));
     assert.equal(await page.evaluate(()=>dinero),0);
-    await page.click('#boton-logout'); await page.waitForFunction(()=>!document.body.classList.contains('jugando'));
+    await page.keyboard.press('Escape');await page.click('#boton-logout'); await page.waitForFunction(()=>!document.body.classList.contains('jugando'));
     await page.fill('#login-usuario',email); await page.fill('#login-password','test-pass-123');
     await page.locator('#form-login button[type=submit]').click(); await page.waitForFunction(()=>document.body.classList.contains('jugando'));
     assert.equal(await page.evaluate(()=>dinero),774);

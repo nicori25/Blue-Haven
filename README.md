@@ -43,7 +43,8 @@ Abrí `http://localhost:8080`. Este contenedor solo sirve archivos; los datos es
 | Mochila y equipamiento | I |
 | Enciclopedia | L |
 | Guía de pesca | Q o botón inferior derecho |
-| Salir de un panel / cancelar | Escape |
+| Ajustes / cerrar el panel abierto | Escape |
+| Liberar o capturar el cursor | P |
 | Ritmo | A/S/D o Z/X/C |
 
 Acercate a la tienda y presioná E para entrar, incluso sin peces. Elegí Comprar o Vender; el panel permite seguir explorando el interior o salir. Con I podés cambiar tu equipo desde cualquier lugar.
@@ -108,3 +109,5 @@ https://nicori25.github.io/Blue-Haven/
 El archivo `.nojekyll` permite servir directamente los archivos estáticos del repositorio. Cada cambio en `main` vuelve a publicar; las ramas alternativas no reemplazan el sitio principal.
 
 En Supabase → Authentication → URL Configuration, la dirección de producción debe ser `https://nicori25.github.io/Blue-Haven/` y la lista de redirecciones debe incluir `https://nicori25.github.io/Blue-Haven/**`, conservando las URLs de desarrollo que necesites. El cliente ya usa el origen y la ruta actuales al solicitar la confirmación del email.
+
+En Ajustes (Esc) podés cambiar gráficos, rendimiento, volumen y silencio, y cerrar sesión. El volumen se guarda en este navegador y controla la salida general de audio; esta versión todavía no incluye música ni efectos sonoros. El cursor se captura al entrar mediante el botón de acceso; al recuperar una sesión automáticamente el navegador puede requerir P o un clic. La guía (Q) bloquea el movimiento mientras escribís.

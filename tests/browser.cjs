@@ -6,9 +6,9 @@ await page.click('#boton-invitado');await page.waitForFunction(()=>document.body
 await page.waitForFunction(()=>!!TIENDA.objetoMundo);await page.waitForTimeout(500);
 const stats=await page.evaluate(()=>({calls:renderizador3D.info.render.calls,terrain:escena3D.children.filter(o=>o.name.startsWith('terreno-')).length}));assert.ok(stats.terrain<40);assert.ok(stats.calls<150);console.log('Render:',stats);
 const dir=process.env.SCREENSHOT_DIR||'test-results';fs.mkdirSync(dir,{recursive:true});await page.screenshot({path:dir+'/juego.png'});
-await page.click('#boton-chat');await page.locator('#chat-input').fill('¿Dónde vive el Atún?');await page.locator('#chat-form').evaluate(f=>f.requestSubmit());assert.match(await page.locator('#chat-mensajes').innerText(),/océano/);
+await page.keyboard.press('p');await page.click('#boton-chat');await page.locator('#chat-input').fill('¿Dónde vive el Atún?');await page.locator('#chat-form').evaluate(f=>f.requestSubmit());assert.match(await page.locator('#chat-mensajes').innerText(),/océano/);
 assert.equal(await page.evaluate(()=>{const old=keyIsDown;window.keyIsDown=k=>k===87;const x=jugador.posicion.x;jugador.actualizar();window.keyIsDown=old;return jugador.posicion.x===x}),true);await page.click('#chat-cerrar');
-await page.click('#boton-ajustes');assert.equal(await page.locator('#ajustes').evaluate(d=>d.open),true);await page.selectOption('#calidad-grafica','baja');await page.locator('#ajustes button').click();
+await page.click('#boton-ajustes');assert.equal(await page.locator('#ajustes').evaluate(d=>d.open),true);await page.selectOption('#calidad-grafica','baja');await page.locator('#cerrar-ajustes').click();
 await page.evaluate(()=>abrirEnciclopedia());await page.screenshot({path:dir+'/enciclopedia.png'});await page.evaluate(()=>cerrarEnciclopedia());
 const result=await page.evaluate(async()=>{inventario=[];dinero=0;await agregarPez({nombre:'Atún',rareza:2,calidadId:'legendario',multiplicadorCalidad:5.5,capturaRiesgo:true});await venderTodos();await comprarCañaTienda();return{dinero,tieneCañaBambu}});assert.deepEqual(result,{dinero:774,tieneCañaBambu:true});
 // Construcción, actualización y dibujo de las cinco familias de minijuegos.

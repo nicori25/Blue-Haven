@@ -135,7 +135,7 @@ document.addEventListener("keydown", (e) => {
   if (esCampo) return;
 
   const tecla = (e.key || "").toLowerCase();
-  if (tecla === "q" && chatJugando() && !chatAbierto) {
+  if (tecla === "q" && chatJugando() && !chatAbierto && !document.getElementById("ajustes").open && !document.getElementById("comercio")?.open) {
     abrirChat();
   }
 });
