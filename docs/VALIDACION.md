@@ -48,3 +48,11 @@ La migración de tienda se aplicó también al proyecto alojado. El asesor de Su
 ## Ajustes y cursor
 
 Prueba de navegador dedicada: captura inicial al entrar como invitado, liberar y capturar con P, abrir con Esc, botón de sesión dentro de Ajustes, volumen sobre el nodo de salida real de p5.sound, silencio y persistencia al recargar. Con W mantenida y Q se verifica posición inmóvil, también al escribir. Se conservan las pruebas de tienda, minijuegos y cierre de sesión con Supabase local.
+
+## Mapa compacto, tienda y fichas de captura
+
+Mapa reducido de 48×39 a 36×31 (40,4 % menos celdas), conservando posiciones de agua, aparición y tienda. Se excluyen árboles fuera de los nuevos límites. BVH 0.5.24 compatible con Three r128 sobre mallas estáticas, primer impacto para rayos y consulta de caña reutilizada por fotograma.
+
+Perfil local de Chromium/SwiftShader, mismo punto interior: promedio de 20 consultas de colisión de 16,785 a 1,185 ms; 50 consultas de piso de 0,476 a 0,058 ms. Estos tiempos miden consultas, no FPS en el equipo del jugador. El arranque general pasó de 62 a 54 llamadas de dibujo en la prueba existente.
+
+Prueba dedicada: 40 posiciones con piso y paredes equivalentes entre BVH y raycast original; nueve imágenes cargadas; nueve victorias disparan fichas con todos los campos y un único ingreso por captura; pausa de movimiento; décima captura y liberación por mochila llena; cierre devuelve la línea a reposo. Revisión visual de la ficha del Dragón. Se prueba también guardado de una captura desde la ficha con cuenta de Supabase local y recarga. Los sprites faltantes se resuelven por nombre para catálogos ya instalados, sin modificar cuentas ni requerir migración remota.

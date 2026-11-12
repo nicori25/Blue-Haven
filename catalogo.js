@@ -145,3 +145,11 @@ const CATALOGO_ESPECIES = [
     "pesoSeleccion": 1
   }
 ];
+
+// Arte local de las nueve especies, también para catálogos anteriores de Supabase.
+const SPRITES_ESPECIES={
+  'Carpa':'Carpa.svg','Trucha Arcoíris':'Trucha.svg','Atún':'Atun.png',
+  'Pez Globo':'Pez_Globo.png','Calamar':'Calamar.png','Dragón del Lago':'Dragon.svg',
+  'Esturión Gigante':'Esturion.svg','Ballena Azul':'Ballena_azul.png','Pez Remo':'Pez_remo.svg'
+};
+for(const pez of CATALOGO_ESPECIES)pez.sprite=SPRITES_ESPECIES[pez.nombre];

@@ -9,7 +9,7 @@ try { Object.assign(opcionesGraficas, JSON.parse(localStorage.getItem('BLUEHAVEN
 let muestrasFPS = [];
 let ultimoIndicador = 0;
 function interfazBloqueada() {
-  return !document.body.classList.contains('jugando') || !!window.chatAbierto || !!document.getElementById('ajustes')?.open || !!document.getElementById('comercio')?.open;
+  return !document.body.classList.contains('jugando') || !!window.chatAbierto || !!document.getElementById('ajustes')?.open || !!document.getElementById('comercio')?.open || !!document.getElementById('tarjeta-captura')?.open;
 }
 function aplicarCalidadGrafica() {
   const config = OPCIONES_GRAFICAS[opcionesGraficas.calidad] || OPCIONES_GRAFICAS.media;
@@ -57,6 +57,7 @@ function cargarArboles() {
     const hojas = new THREE.MeshLambertMaterial({ color: 0x47784c });
     original.traverse(o => { if (o.isMesh) o.material = /tron|trunk/i.test(o.name) ? corteza : hojas; });
     for (const [c, f] of [[5,5],[12,5],[20,5],[35,6],[40,12],[39,27],[15,30],[5,22]]) {
+      if(c<=0||f<=0||c>=MAPA_ANCHO-1||f>=MAPA_ALTO-1)continue;
       const arbol = original.clone();
       arbol.scale.setScalar(escala);
       arbol.position.set(c * TAMAÑO_CELDA, -caja.min.y * escala, f * TAMAÑO_CELDA);
@@ -132,6 +133,7 @@ document.addEventListener('keydown',e=>{
     e.preventDefault();e.stopImmediatePropagation();
     const ajustes=document.getElementById('ajustes'),tienda=document.getElementById('comercio');
     if(ajustes.open)ajustes.close();
+    else if(document.getElementById('tarjeta-captura')?.open)cerrarTarjetaCaptura();
     else if(tienda?.open)cerrarComercio();
     else if(window.chatAbierto)cerrarChat();
     else if(ENCICLOPEDIA.abierta)cerrarEnciclopedia();

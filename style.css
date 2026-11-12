@@ -448,3 +448,30 @@ body:not(.jugando) #panel-chat,
 #ajustes #boton-logout { position: static; margin-top: 16px; height: auto; background: #633938; }
 #volumen-general { width: 100%; accent-color: #87cfc5; }
 #valor-volumen { float: right; }
+
+#tarjeta-captura { --brillo-captura: 255,190,60; box-sizing:border-box; width:min(820px,94vw); max-height:90vh; overflow:auto; padding:0; border:2px solid rgba(var(--brillo-captura),.9); border-radius:22px; color:#e6f5f0; background:#102b37; font-family:'Space Grotesk',sans-serif; box-shadow:0 0 35px rgba(var(--brillo-captura),.35); }
+#tarjeta-captura::backdrop { background:#001018c9; }
+.captura-ficha { padding:28px; }
+.captura-ficha header { text-align:center; }
+.captura-ficha header span { color:rgb(var(--brillo-captura)); font-size:12px; letter-spacing:3px; }
+.captura-ficha h2 { margin:12px 0 5px; font-size:30px; }
+#captura-cientifico { margin:0 0 24px; color:#a6c8cc; font-style:italic; }
+.captura-cuerpo { display:grid; grid-template-columns:210px 1fr; gap:26px; }
+.captura-retrato { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; isolation:isolate; }
+.captura-retrato::before { content:''; position:absolute; inset:10% -10%; z-index:-1; background:radial-gradient(ellipse,rgba(var(--brillo-captura),.35),transparent 68%); animation:brillo-pez 2.5s ease-in-out infinite alternate; }
+#captura-sprite { width:190px; height:170px; object-fit:contain; image-rendering:pixelated; }
+#captura-calidad { color:rgb(var(--brillo-captura)); font-size:19px; }
+#captura-valor { color:#ffe29b; }
+#captura-descripcion { margin-top:0; line-height:1.6; }
+#captura-datos { display:grid; grid-template-columns:130px 1fr; gap:10px 14px; font-size:13px; line-height:1.5; }
+#captura-datos dt { color:#94bebd; } #captura-datos dd { margin:0; }
+#captura-curiosidad { border-left:3px solid rgb(var(--brillo-captura)); padding:12px; background:#173e49; font-size:13px; line-height:1.6; }
+.captura-ficha footer { margin-top:24px; text-align:center; border-top:1px solid #33535e; padding-top:10px; }
+#captura-guardado { font-size:13px; color:#aed5c6; }
+#captura-continuar { border:1px solid rgb(var(--brillo-captura)); border-radius:9px; background:#214956; color:#effcf6; padding:12px 24px; cursor:pointer; font:inherit; }
+#captura-continuar:disabled { opacity:.5; cursor:wait; }
+@keyframes brillo-pez { from {opacity:.5;transform:scale(.9)} to {opacity:1;transform:scale(1.08)} }
+@media(max-width:600px) { .captura-cuerpo { grid-template-columns:1fr;gap:16px; } .captura-ficha{padding:20px} .captura-retrato{gap:8px} #captura-sprite{height:110px} #captura-datos{grid-template-columns:110px 1fr} }
+@media(prefers-reduced-motion:reduce) { .captura-retrato::before{animation:none} }
+
+.comercio-pez { float:left; width:64px; height:54px; object-fit:contain; image-rendering:pixelated; margin-right:16px; }
