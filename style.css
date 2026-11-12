@@ -475,3 +475,22 @@ body:not(.jugando) #panel-chat,
 @media(prefers-reduced-motion:reduce) { .captura-retrato::before{animation:none} }
 
 .comercio-pez { float:left; width:64px; height:54px; object-fit:contain; image-rendering:pixelated; margin-right:16px; }
+
+/* Ficha compacta: adapta el contenido completo al espacio de la ventana. */
+#tarjeta-captura { width:min(760px,calc(100vw - 24px)); max-width:calc(100vw - 24px); max-height:none; overflow:visible; border-radius:16px; }
+.captura-ficha { padding:18px 22px; }
+.captura-ficha header span { font-size:10px; letter-spacing:2px; }
+.captura-ficha h2 { margin:6px 0 3px; font-size:25px; }
+#captura-cientifico { margin:0 0 14px; font-size:12px; }
+.captura-cuerpo { grid-template-columns:155px minmax(0,1fr); gap:18px; }
+.captura-retrato { gap:10px; }
+#captura-sprite { width:145px; height:125px; }
+#captura-calidad { font-size:16px; }
+#captura-valor { font-size:13px; }
+#captura-descripcion { font-size:13px; line-height:1.4; margin-bottom:10px; }
+#captura-datos { grid-template-columns:115px minmax(0,1fr); gap:6px 10px; font-size:12px; line-height:1.35; margin:10px 0; }
+#captura-curiosidad { padding:8px 10px; font-size:12px; line-height:1.4; }
+.captura-ficha footer { margin-top:14px; padding-top:8px; }
+#captura-guardado { margin:5px 0 10px; font-size:12px; }
+#captura-continuar { padding:9px 18px; font-size:13px; }
+@media(max-width:600px) { .captura-ficha { padding:14px; } .captura-cuerpo { grid-template-columns:1fr; gap:10px; } .captura-retrato { flex-direction:row; flex-wrap:wrap; gap:8px 14px; } #captura-sprite { width:95px; height:70px; } #captura-cientifico { margin-bottom:8px; } }
