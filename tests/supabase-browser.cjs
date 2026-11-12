@@ -40,6 +40,11 @@ if (!url || !key || !['localhost','127.0.0.1'].includes(new URL(url).hostname)) 
     assert.equal(await page.evaluate(()=>efectosLance.enganche),.15);
     await page.reload();await page.waitForFunction(()=>document.body.classList.contains('jugando'));
     assert.equal(await page.evaluate(()=>dinero),649);assert.equal(await page.evaluate(()=>objetosPesca.lombriz),4);assert.equal(await page.evaluate(()=>equipoPesca.anzuelo),'precision');assert.deepEqual(errors,[]);
+    await page.evaluate(()=>{BIENVENIDA.activa=false;BIENVENIDA._saliendo=false;sistemaCaptura.iniciar(CATALOGO_ESPECIES[0]);sistemaCaptura.estado='capturado';sistemaCaptura.actualizar()});
+    await page.waitForFunction(()=>document.getElementById('tarjeta-captura').open&&!guardandoTarjeta);
+    assert.match(await page.locator('#captura-guardado').innerText(),/guardada/);
+    await page.click('#captura-continuar');await page.reload();await page.waitForFunction(()=>document.body.classList.contains('jugando'));
+    assert.equal(await page.evaluate(()=>inventario.length),1);assert.equal(await page.evaluate(()=>CATALOGO_ESPECIES.every(p=>!!spritesPeces[p.sprite])),true);
     console.log('Navegador Supabase: registro, economía, restauración de sesión, logout, invitado y login OK');
   } finally { await browser.close(); }
 })().catch(e=>{console.error(e);process.exitCode=1});

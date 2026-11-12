@@ -1,3 +1,10 @@
+// BVH: descarta grupos de triángulos antes de consultar colisiones precisas.
+THREE.BufferGeometry.prototype.computeBoundsTree=MeshBVHLib.computeBoundsTree;
+THREE.BufferGeometry.prototype.disposeBoundsTree=MeshBVHLib.disposeBoundsTree;
+THREE.Mesh.prototype.raycast=MeshBVHLib.acceleratedRaycast;
+function acelerarMallas(modelo) {
+  modelo.traverse(m=>{if(m.isMesh && !m.isSkinnedMesh && !m.geometry.boundsTree)m.geometry.computeBoundsTree();});
+}
 const TIENDA = {
   posicion: null,
   objetoMundo: null,
@@ -37,6 +44,7 @@ const TIENDA_ESCALON_MAXIMO =
 const TIENDA_ALTURAS_RAYOS = [6, 20, 34];
 
 const _tiendaRaycaster = new THREE.Raycaster();
+_tiendaRaycaster.firstHitOnly=true;
 const _tiendaOrigen = new THREE.Vector3();
 const _tiendaDireccion = new THREE.Vector3();
 const _tiendaDireccionesRayos = (() => {
@@ -59,6 +67,7 @@ function tiendaInicializar() {
 // Registra las mallas del modelo que bloquean (paredes/objetos) y el piso.
 function tiendaRegistrarColisiones(modelo) {
   modelo.updateMatrixWorld(true);
+  acelerarMallas(modelo);
   TIENDA.mallasParedes = [];
   TIENDA.mallasPiso = [];
 

@@ -205,20 +205,17 @@ class SistemaCaptura {
         }
         break;
 
-      case "capturado":
+      case "capturado": {
+        // Se guarda una sola vez y la ficha permanece hasta que el jugador la cierre.
+        const ejemplar={...this.pez,precio:calcularPrecio(this.pez)};
+        this.estado="inactivo";
+        mostrarTarjetaCaptura(ejemplar);
+        break;
+      }
       case "linea_rota":
       case "pez_escapado":
         this.timerFase -= dt;
         if (this.timerFase <= 0) {
-          if (this.estado === "capturado") {
-            // El precio queda fijado al capturar.
-            this.pez.precio = calcularPrecio(this.pez);
-            // Se registra aunque la mochila esté llena.
-            const ejemplar = { ...this.pez };
-            agregarPez(ejemplar).then(guardado => {
-              if (guardado) registrarCaptura(ejemplar);
-            });
-          }
           this.estado = "inactivo";
         }
         break;

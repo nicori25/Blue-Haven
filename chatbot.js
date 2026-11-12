@@ -24,7 +24,7 @@ function chatJugando() {
 }
 
 function abrirChat() {
-  if (!chatJugando()) return;
+  if (!chatJugando() || document.querySelector("dialog[open]")) return;
   if (typeof sistemaCaptura !== "undefined") sistemaCaptura.soltarBoton();
   chatAbierto = true;
   window.chatAbierto = true;

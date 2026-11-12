@@ -31,12 +31,9 @@ let faseSalpicadura = 0;
 let ajusteMiradaPesca = null;
 
 function preload() {
-  spritesPeces["Atun.png"] = loadImage("textures/peces/Atun.png");
-  spritesPeces["Calamar.png"] = loadImage("textures/peces/Calamar.png");
-  spritesPeces["Ballena_azul.png"] = loadImage(
-    "textures/peces/Ballena_azul.png",
-  );
-  spritesPeces["Pez_Globo.png"] = loadImage("textures/peces/Pez_Globo.png");
+  for(const especie of CATALOGO_ESPECIES) {
+    if(especie.sprite)spritesPeces[especie.sprite]=loadImage('textures/peces/'+especie.sprite);
+  }
 }
 
 function setup() {
@@ -86,7 +83,7 @@ async function cargarDatosUsuario() {
   window.sesionUsuario = estado.perfil;
   catalogoEspecies = estado.catalogo;
   inventario = estado.inventario;
-  CATALOGO_ESPECIES.splice(0, CATALOGO_ESPECIES.length, ...catalogoEspecies.map(p => ({ ...p.datos, ...p })));
+  CATALOGO_ESPECIES.splice(0, CATALOGO_ESPECIES.length, ...catalogoEspecies.map(p => ({ ...p.datos, ...p, sprite: SPRITES_ESPECIES[p.nombre] || p.sprite || p.datos?.sprite })));
   for (const k in REGISTRO_CAPTURAS) delete REGISTRO_CAPTURAS[k];
   for (const especie of catalogoEspecies) {
     if (especie.descubierto) REGISTRO_CAPTURAS[especie.nombre] = {
@@ -797,6 +794,7 @@ function cargarCañaTiendaEnEscena() {
       mallaHitboxCaña.name = "HitboxCañaTienda";
       nodoRod.add(mallaHitboxCaña);
 
+      acelerarMallas(modeloCañaTienda);
       // Contenedor colocado dentro de la tienda
       grupoCañaTienda = new THREE.Group();
       grupoCañaTienda.add(modeloCañaTienda);
@@ -852,7 +850,15 @@ function actualizarAnimacionCañaTienda() {
   });
 }
 
+let frameHoverCaña=-1, resultadoHoverCaña=false;
+const rayoHoverCaña=new THREE.Raycaster(), centroHoverCaña=new THREE.Vector2(0,0);
+rayoHoverCaña.firstHitOnly=true;
 function mirandoCañaTienda() {
+  if(frameHoverCaña===frameCount)return resultadoHoverCaña;
+  frameHoverCaña=frameCount;
+  return resultadoHoverCaña=calcularHoverCaña();
+}
+function calcularHoverCaña() {
   if (!modeloCañaTienda || !camara3D || !TIENDA.posicion) return false;
 
   const dx = jugador.posicion.x - posicionBaseCaña.x;
@@ -860,8 +866,8 @@ function mirandoCañaTienda() {
   const distJugador = Math.hypot(dx, dz);
   if (distJugador > TAMAÑO_CELDA * 3.5) return false;
 
-  const raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera(new THREE.Vector2(0, 0), camara3D);
+  const raycaster = rayoHoverCaña;
+  raycaster.setFromCamera(centroHoverCaña, camara3D);
 
   const intersecciones = raycaster.intersectObject(modeloCañaTienda, true);
 

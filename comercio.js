@@ -55,7 +55,7 @@ function renderizarComercio() {
   if(!inventario.length){const vacio=document.createElement('p');vacio.className='comercio-vacio';vacio.textContent='Tu mochila está vacía. Podés ir a Comprar para preparar tu próxima salida de pesca.';contenido.append(vacio);return;}
   for(const [i,pez] of inventario.entries()){
     const fila=document.createElement('article');fila.className='comercio-producto';
-    const info=document.createElement('div'),nombre=document.createElement('h3'),detalle=document.createElement('p');nombre.textContent=pez.nombre;detalle.textContent=calidadDe(pez).nombre+' · $'+precioDe(pez);info.append(nombre,detalle);fila.append(info);
+    const info=document.createElement('div'),nombre=document.createElement('h3'),detalle=document.createElement('p');nombre.textContent=pez.nombre;detalle.textContent=calidadDe(pez).nombre+' · $'+precioDe(pez);const retrato=document.createElement('img');retrato.className='comercio-pez';retrato.src='textures/peces/'+SPRITES_ESPECIES[pez.nombre];retrato.alt=pez.nombre;info.prepend(retrato);info.append(nombre,detalle);fila.append(info);
     if(comercio.pagina==='vender'){const b=botonComercio('Vender $'+precioDe(pez),async()=>{await venderPez(i);renderizarComercio()});b.disabled=ocupado;fila.append(b)}contenido.append(fila);
   }
   if(comercio.pagina==='vender'){const b=botonComercio('Vender todo · $'+valorTotalInventario(),async()=>{await venderTodos();renderizarComercio()});b.disabled=ocupado;b.className='comercio-vender-todo';contenido.append(b)}

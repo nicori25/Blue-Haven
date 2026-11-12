@@ -14,7 +14,8 @@
     "test:supabase": "sh scripts/probar-supabase.sh",
     "test:browser:supabase": "node tests/supabase-browser.cjs",
     "test:shop": "node tests/shop-browser.cjs",
-    "test:settings": "node tests/settings-browser.cjs"
+    "test:settings": "node tests/settings-browser.cjs",
+    "test:captures": "node tests/capture-browser.cjs"
   },
   "engines": {
     "node": ">=20"

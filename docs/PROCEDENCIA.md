@@ -27,3 +27,6 @@ La tienda original se optimizó con glTF Transform y Sharp, sin cambiar su geome
 ## Migración a Supabase
 
 La versión actual reemplaza la API PHP y MariaDB de esta integración por el SDK oficial `@supabase/supabase-js` (MIT), Supabase Auth y funciones PostgreSQL. El SDK se empaqueta localmente mediante esbuild; su aviso de licencia está en `libraries/SUPABASE-LICENSE.txt`. Los SQL originales de MySQL se conservan en `docs/legacy/mysql/` como referencia histórica.
+
+- three-mesh-bvh 0.5.24: MIT, https://github.com/gkjohnson/three-mesh-bvh/tree/v0.5.24. Compilación UMD distribuida por jsDelivr, minimizada con esbuild; licencia en libraries/three-mesh-bvh.LICENSE.
+- Sprites SVG de Carpa, Trucha, Dragón, Esturión y Pez Remo: dibujos originales de esta integración, sin recursos externos. Se conservan los cuatro PNG originales.
