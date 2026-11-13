@@ -26,6 +26,7 @@ jobs:
       - run: npm run test:settings
       - run: npm run test:captures
       - run: npm run test:forest
+      - run: npm run test:mobile
       - name: Probar cuentas en navegador con Supabase local
         run: |
           export SUPABASE_TEST_URL=http://127.0.0.1:54321

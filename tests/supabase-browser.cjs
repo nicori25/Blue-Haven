@@ -52,6 +52,12 @@ if (!url || !key || !['localhost','127.0.0.1'].includes(new URL(url).hostname)) 
     assert.match(await page.locator('#captura-guardado').innerText(),/guardada/);
     await page.click('#captura-continuar');await page.reload();await page.waitForFunction(()=>document.body.classList.contains('jugando'));
     assert.equal(await page.evaluate(()=>inventario.length),1);assert.equal(await page.evaluate(()=>CATALOGO_ESPECIES.every(p=>!!spritesPeces[p.sprite])),true);
+    if(await page.evaluate(()=>!!document.pointerLockElement))await page.keyboard.press('p');
+    await page.evaluate(()=>{BIENVENIDA.activa=false;BIENVENIDA._saliendo=false});
+    await page.click('#boton-ranking');await page.waitForFunction(()=>document.getElementById('ranking-propio').textContent.includes('$649'));
+    assert.match(await page.locator('#ranking-propio').innerText(),/2 capturas/);
+    await page.locator('[data-ranking="capturas"]').click();await page.waitForFunction(()=>!document.getElementById('ranking-actualizar').disabled);await page.click('#ranking-cerrar');
+    assert.deepEqual(errors,[]);
     console.log('Navegador Supabase: registro, economía, restauración de sesión, logout, invitado y login OK');
   } finally { await browser.close(); }
 })().catch(e=>{console.error(e);process.exitCode=1});
