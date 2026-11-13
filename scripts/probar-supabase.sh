@@ -18,5 +18,9 @@ shop_installed=$(docker compose -p "$project_name" -f "$compose_file" exec -T db
 if [ "$shop_installed" != t ]; then
   docker compose -p "$project_name" -f "$compose_file" exec -T db psql -U postgres -v ON_ERROR_STOP=1 < supabase/migrations/20261111234025_tienda_equipamiento.sql
 fi
+filters_installed=$(docker compose -p "$project_name" -f "$compose_file" exec -T db psql -U postgres -tAc "select to_regprocedure('bluehaven_privado.validar_cuenta_auth()') is not null")
+if [ "$filters_installed" != t ]; then
+  docker compose -p "$project_name" -f "$compose_file" exec -T db psql -U postgres -v ON_ERROR_STOP=1 < supabase/migrations/20261113122304_filtros_cuentas.sql
+fi
 docker compose -p "$project_name" -f "$compose_file" exec -T db psql -U postgres -c "NOTIFY pgrst, 'reload schema'"
 SUPABASE_TEST_URL=http://127.0.0.1:54321 SUPABASE_TEST_ANON_KEY="$(node tests/supabase/token.cjs)" npm run test:api

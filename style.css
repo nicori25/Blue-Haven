@@ -494,3 +494,6 @@ body:not(.jugando) #panel-chat,
 #captura-guardado { margin:5px 0 10px; font-size:12px; }
 #captura-continuar { padding:9px 18px; font-size:13px; }
 @media(max-width:600px) { .captura-ficha { padding:14px; } .captura-cuerpo { grid-template-columns:1fr; gap:10px; } .captura-retrato { flex-direction:row; flex-wrap:wrap; gap:8px 14px; } #captura-sprite { width:95px; height:70px; } #captura-cientifico { margin-bottom:8px; } }
+
+.dominios-cuentas { margin-top:14px; font-size:12px; color:#acd0d2; } .dominios-cuentas summary { cursor:pointer; } .dominios-cuentas p { line-height:1.5; overflow-wrap:anywhere; }
+.caja-auth { box-sizing:border-box; width:min(400px,94vw); max-height:calc(100dvh - 32px); overflow-y:auto; }

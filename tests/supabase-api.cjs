@@ -14,11 +14,17 @@ async function rpc(c, name, args) {
   const a = client(), b = client(), anon = client();
   const stamp = Date.now();
   const sign = async (c, name) => {
-    const { data, error } = await c.auth.signUp({ email: `${name}_${stamp}@example.com`, password: 'test-pass-123', options: { data: { usuario: name } } });
+    const { data, error } = await c.auth.signUp({ email: `${name}_${stamp}@gmail.com`, password: 'test-pass-123', options: { data: { usuario: name } } });
     assert.equal(error, null); assert.ok(data.session, 'El stack de pruebas debe autoconfirmar emails.');
     return data.user.id;
   };
+  for(const [email,usuario] of [[`bloqueado_${stamp}@example.com`,'Pescador'],[`bloqueado_${stamp}@gmail.com.evil.test`,'Pescador'],[`nombre_${stamp}@gmail.com`,'P3LOTUD0'],[`puto${stamp}@gmail.com`,'Pescador']]) {
+    const rechazado=await client().auth.signUp({email,password:'test-pass-123',options:{data:{usuario}}});assert.ok(rechazado.error,'Debe rechazar el registro directo: '+email);assert.equal(rechazado.data.user,null);
+  }
   const idA = await sign(a, 'pescadorA'); await sign(b, 'pescadorB');
+  await sign(client(),'Maricarmen');
+  assert.ok((await a.auth.updateUser({data:{usuario:'p.u.t.o'}})).error,'No debe permitir eludir el filtro cambiando metadata');
+  assert.equal((await a.auth.getUser()).data.user.user_metadata.usuario,'pescadorA');
   let estado = await rpc(a, 'bh_estado'); assert.equal(estado.perfil.usuario_id, idA); assert.equal(estado.catalogo.length, 9);
   const atun = estado.catalogo.find(p => p.nombre === 'Atún'), globo = estado.catalogo.find(p => p.nombre === 'Pez Globo');
   const captura = { p_pez_id: atun.id, p_calidad: 'legendario', p_riesgo: true, p_token: crypto.randomUUID() };
