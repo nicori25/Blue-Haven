@@ -30,3 +30,9 @@ La versión actual reemplaza la API PHP y MariaDB de esta integración por el SD
 
 - three-mesh-bvh 0.5.24: MIT, https://github.com/gkjohnson/three-mesh-bvh/tree/v0.5.24. Compilación UMD distribuida por jsDelivr, minimizada con esbuild; licencia en libraries/three-mesh-bvh.LICENSE.
 - Sprites SVG de Carpa, Trucha, Dragón, Esturión y Pez Remo: dibujos originales de esta integración, sin recursos externos. Se conservan los cuatro PNG originales.
+
+## Diseño de backend actualizado
+
+Se revisó `Sebasgvr/BlueHaven/backend` hasta `83b55f5` (incluye `461617d`, bosque). Se incorporan el suelo exterior, fondo forestal procedural y su generador con semilla; la composición de árboles interiores, borde y segunda fila; niebla y bloqueo del lago con excepción del puente. Las tres capas se adaptan a InstancedMesh y los troncos interiores usan una cuadrícula de colisiones. El mapa conserva 36×31 celdas y las ubicaciones actuales. Se añadieron transparencia en el límite superior del fondo y separación de profundidad en las piezas del árbol.
+
+El resto de los recursos y minijuegos ya estaba integrado. El dato educativo de la captura está cubierto por la ficha actual. Se conserva el modelo de tienda optimizado (aproximadamente 1 MB frente a 45,6 MB del original), Supabase, equipamiento, sprites, ajustes y fichas adaptables. No se restaura la API PHP/MySQL ni se desactiva la colisión de la tienda como hace esa revisión de origen.
