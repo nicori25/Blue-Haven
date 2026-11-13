@@ -69,6 +69,20 @@ async function rpc(c, name, args) {
   assert.ok((await a.from('equipo_usuario').update({cantidad:999}).eq('usuario_id',idA)).error);
   assert.deepEqual((await b.from('equipo_usuario').select('*').eq('usuario_id',idA)).data,[]);
   assert.ok((await anon.rpc('bh_tienda_estado')).error);
+  const antesRanking=await rpc(a,'bh_estado');
+  const totalCapturas=antesRanking.catalogo.reduce((s,p)=>s+(Number(p.cantidad_capturada)||0),0);
+  const ranking=await rpc(a,'bh_ranking',{p_criterio:'dinero'});
+  assert.equal(ranking.tu_puesto.dinero,antesRanking.perfil.dinero);assert.equal(ranking.tu_puesto.capturas,totalCapturas);assert.equal(ranking.tu_puesto.es_tuyo,true);assert.ok(ranking.jugadores.length<=20);
+  const nuevaCaptura={p_pez_id:globo.id,p_calidad:'comun',p_riesgo:false,p_token:crypto.randomUUID()};
+  const itemRank=await rpc(a,'bh_guardar_captura',nuevaCaptura);await rpc(a,'bh_guardar_captura',nuevaCaptura);
+  assert.equal((await rpc(a,'bh_ranking',{p_criterio:'capturas'})).tu_puesto.capturas,totalCapturas+1);
+  const ventaRank=await rpc(a,'bh_vender_pez',{p_inventario_id:itemRank.inventario_id});
+  assert.equal((await rpc(a,'bh_ranking')).tu_puesto.dinero,ventaRank.dinero);
+  await rpc(a,'bh_comprar_producto',{p_producto_id:'marisco',p_token:crypto.randomUUID()});
+  assert.equal((await rpc(a,'bh_ranking')).tu_puesto.dinero,ventaRank.dinero-75);
+  for(const criterio of ['dinero','capturas']){const publico=await rpc(anon,'bh_ranking',{p_criterio:criterio});assert.equal(publico.tu_puesto,null);for(const fila of publico.jugadores){assert.deepEqual(Object.keys(fila).sort(),['capturas','dinero','es_tuyo','nombre','puesto']);assert.equal(fila.es_tuyo,false);}for(let i=1;i<publico.jugadores.length;i++)assert.ok(publico.jugadores[i-1][criterio]>=publico.jugadores[i][criterio]);}
+  assert.ok((await anon.rpc('bh_ranking',{p_criterio:'dinero;drop table perfiles'})).error);
+  assert.ok((await a.schema('bluehaven_privado').from('ranking_pesca').update({dinero:999999}).eq('usuario_id',idA)).error);
   await a.auth.signOut(); assert.ok((await a.rpc('bh_estado')).error);
   console.log('Supabase Auth + PostgreSQL + PostgREST: cuentas, RLS, concurrencia, capturas, economía y guía OK');
 })().catch(e => { console.error(e); process.exitCode = 1; });

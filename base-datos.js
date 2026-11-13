@@ -42,6 +42,7 @@
     },
     async salir() { verificar(await obtenerCliente().auth.signOut()); },
     async estado() { return rpc('bh_estado'); },
+    async ranking(criterio='dinero') { return rpc('bh_ranking',{p_criterio:criterio}); },
     async estadoTienda() { return rpc('bh_tienda_estado'); },
     async operar(ruta, datos) {
       switch (ruta) {

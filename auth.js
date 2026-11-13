@@ -70,7 +70,7 @@ async function ocultarAuthYArrancar(errorEl) {
     await iniciarJuego();
     pantallaAuth.style.display = 'none'; botonLogout.style.display = 'block';
     cursorLibre=false;capturarCursor();
-    document.body.classList.add('jugando'); document.getElementById('barra-juego').hidden = false;
+    document.body.classList.add('jugando'); window.AudioJuego?.iniciar(); document.getElementById('barra-juego').hidden = false;
     botonLogout.textContent = window.modoInvitado ? 'Salir de invitado' : 'Cerrar sesión';
   } catch (err) {
     if (errorEl) errorEl.textContent = err.message || 'No se pudo cargar tu partida. Reintentá.';
@@ -79,6 +79,10 @@ async function ocultarAuthYArrancar(errorEl) {
 }
 function volverAlAcceso(mensaje = '') {
   window.partidaId++;
+  window.AudioJuego?.pausar();
+  window.ControlTactil?.soltarTodo();
+  document.getElementById('ranking')?.close();
+  document.getElementById('libro-movil')?.close();
   if (typeof noLoop === 'function' && window.juegoPreparado) noLoop();
   if (document.pointerLockElement) document.exitPointerLock();
   if (typeof cerrarChat === 'function') cerrarChat();
