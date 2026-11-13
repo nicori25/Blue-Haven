@@ -60,3 +60,9 @@ Prueba dedicada: 40 posiciones con piso y paredes equivalentes entre BVH y rayca
 ## Diseño forestal de backend
 
 Prueba Chromium: 90 árboles interiores y tres capas de mallas instanciadas; borde sólido, colisión de troncos y lago, aparición despejada y al menos un punto transitable del puente sobre agua. Entrada/salida de la tienda y ausencia de errores JavaScript. La vista medida registró 56 llamadas de dibujo con el bosque cargado (523.104 triángulos); esto no garantiza FPS en otros equipos. Revisión visual del lago y de la tienda. Continuaron aprobados los ocho casos de lógica y el navegador general con los cinco minijuegos, controles, economía y guardado.
+
+## Filtros de email y lenguaje
+
+Doce pruebas de lógica aprobadas: dominios exactos, formato, normalización de ofensas y evasiones comunes, nombres legítimos, llamadas bloqueadas antes del SDK, contraseñas intactas y listas JS/SQL iguales. API real local: rechazo directo de dominios ajenos y suplantados, nombre y correo ofensivos, metadata ofensiva; registro de Maricarmen y operaciones anteriores aprobadas. Navegador: formularios inválidos sin solicitudes de Auth, registro válido, login, recuperación de sesión, economía, captura y persistencia.
+
+Migración aplicada y verificada en Supabase alojado con funciones puras, sin crear usuarios de prueba ni enviar emails. El asesor de seguridad no añadió avisos respecto del estado anterior; permanecen los nueve avisos de [RPC privilegiadas intencionales](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable) y el de [protección de contraseñas filtradas](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).

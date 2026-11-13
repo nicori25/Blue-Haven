@@ -73,7 +73,7 @@
             <span>Usuario</span>
             <input
               type="text"
-              id="reg-usuario"
+              id="reg-usuario" maxlength="50"
               autocomplete="username"
               required
             />
@@ -96,6 +96,7 @@
           <button type="submit" class="boton-principal">Crear mi cuenta</button>
           <p class="error" id="reg-error"></p>
         </form>
+        <details class="dominios-cuentas"><summary>Correos permitidos y reglas</summary><p>Usá un proveedor de la lista. No se admiten palabras ofensivas en el nombre o en el correo.</p><p id="dominios-permitidos"></p></details>
       </div>
     </div>
 
@@ -147,6 +148,7 @@
 
     <script src="config.js"></script>
     <script src="libraries/supabase.min.js"></script>
+    <script src="filtros-cuentas.js"></script>
     <script src="base-datos.js"></script>
     <script src="auth.js"></script>
     <script src="catalogo.js"></script>

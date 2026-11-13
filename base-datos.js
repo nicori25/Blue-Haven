@@ -28,9 +28,11 @@
   }
   window.BaseDatos = {
     async entrar(email, password) {
+      email=FiltrosCuentas.validarEmail(email);
       return verificar(await obtenerCliente().auth.signInWithPassword({ email, password })).session;
     },
     async registrar(usuario, email, password) {
+      email=FiltrosCuentas.validarEmail(email);usuario=FiltrosCuentas.validarNombre(usuario);
       return verificar(await obtenerCliente().auth.signUp({
         email, password, options: { data: { usuario }, emailRedirectTo: location.origin + location.pathname }
       }));
