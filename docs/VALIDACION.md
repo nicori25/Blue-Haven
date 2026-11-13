@@ -76,3 +76,7 @@ Chromium con pantalla táctil emulada y eventos multitáctiles nativos: dos dedo
 En Supabase alojado se comprobó el backfill sin diferencias entre saldo/capturas del ranking y las fuentes, y que no hay permisos de lectura directa de la proyección ni ejecución de la función privada de equipo ajeno. La respuesta contiene solo nombre, puesto, dinero, capturas y marca de usuario propio.
 
 La política privada de denegación explícita eliminó el aviso nuevo de RLS sin políticas; el asesor de seguridad vuelve al mismo conjunto de avisos anteriores ([referencia de RLS](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy)). Se verificó también la RPC alojada con la clave pública, sin sesión, en ambos órdenes y con solo los cinco campos previstos.
+
+## Analógico y barras discretas
+
+Doce pruebas de lógica y la suite móvil de Chromium aprobadas. Se verificaron movimiento y mirada con dos dedos, velocidad parcial, límite circular de intensidad, cancelación y reutilización del analógico después de toques fuera del control; no se captura el cursor ni se abre Ajustes. Los cinco minijuegos, notas sostenidas simultáneas, menús y rotación siguen aprobados. En registro a 390×480 el contenido largo conserva desplazamiento con barras ocultas. Validación con pantalla táctil emulada; pendiente comprobación en un teléfono físico.

@@ -127,14 +127,16 @@ El audio arranca con una interacción del jugador y se pausa al ocultar la pági
 
 El Ranking (botón 🏆 o R) muestra el top 20 por dinero actual o capturas acumuladas. Comprar reduce el saldo clasificado; vender lo aumenta. Las capturas cuentan aunque el pez se venda o se libere por mochila llena. La tabla se actualiza al abrir o pulsar Actualizar y destaca tu puesto, incluso fuera del top 20. Solo participan las cuentas; el invitado puede consultar la tabla. Se publica el nombre de jugador y las puntuaciones, sin correos, UUID, contraseñas ni inventarios.
 
-Los botones táctiles se activan automáticamente en pantallas táctiles y también pueden activarse desde Ajustes. Flechas para moverse, Saltar, arrastre a la derecha para mirar, Lanzar/Recoger y menús de mochila, tienda, guía, especies y ranking. Se puede jugar en vertical u horizontal; la calidad inicial del celular es Baja si no había ajustes guardados. No se usa captura del cursor en modo táctil.
+Los botones táctiles se activan automáticamente en pantallas táctiles y también pueden activarse desde Ajustes. Joystick analógico con velocidad gradual para moverse, Saltar, arrastre a la derecha para mirar, Lanzar/Recoger y menús de mochila, tienda, guía, especies y ranking. Se puede jugar en vertical u horizontal; la calidad inicial del celular es Baja si no había ajustes guardados. No se usa captura del cursor en modo táctil.
 
 | Minijuego | Control táctil |
 |---|---|
 | Anillo | Pulsar cuando el anillo llegue a la zona |
-| Brújula | Izquierda/derecha y mantener o soltar Frenar |
+| Brújula | Analógico a los lados y mantener o soltar Frenar |
 | Ritmo | A/S/D, mantener notas largas y tocar dos pistas simultáneas |
-| Esquiva | Flechas en cuatro direcciones |
+| Esquiva | Analógico en cualquier dirección |
 | Multietapa | Cambia los controles según la fase; Acción para el evento de reacción |
 
 Los minijuegos mantienen un espacio de dibujo consistente al girar el teléfono. La enciclopedia táctil usa un selector y conserva las fichas bloqueadas hasta descubrirlas. Los controles se sueltan al abrir un panel, perder foco o cancelar un toque.
+
+Las barras de desplazamiento están ocultas en todas las pantallas; el contenido largo sigue desplazándose con el dedo, la rueda o el teclado. El analógico vuelve al centro al soltar, cancelar el gesto, girar el teléfono o abrir un panel.

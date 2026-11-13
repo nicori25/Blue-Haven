@@ -411,6 +411,8 @@ function keyReleased() {
 }
 
 function controlarClicEscena(evento) {
+  // En teléfonos los gestos los administra el controlador táctil, no el clic de escritorio.
+  if(window.ControlTactil?.activo)return;
   if (interfazBloqueada()) return;
   // Cerrar la pantalla de bienvenida con clic
   if (bienvenidaActiva()) {
