@@ -50,9 +50,11 @@ class Jugador {
         const cx = floor(px / TAMAÑO_CELDA);
         const cy = floor(py / TAMAÑO_CELDA);
         if (esPared(cx, cy)) return true;
+        // Permite el puente de la tienda, pero impide caminar sobre el lago.
+        if(esAgua(cx,cy)&&tiendaAlturaPiso(pos.x,pos.y,this.alturaPiso||0)<=0)return true;
       }
     }
-    return tiendaColisiona(pos);
+    return tiendaColisiona(pos)||bosqueColisiona(pos,this.margenColision);
   }
 
   girar(cantidad) {

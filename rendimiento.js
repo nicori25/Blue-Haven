@@ -47,26 +47,6 @@ function construirTerrenoInstanciado(materialPared) {
     escena3D.add(mesh);
   }
 }
-function cargarArboles() {
-  // Recurso de la rama diseños, compartiendo geometría y materiales entre árboles.
-  new THREE.OBJLoader().load('models/3D/Modelo_arbol.obj', original => {
-    const caja = new THREE.Box3().setFromObject(original);
-    const alto = caja.max.y - caja.min.y;
-    const escala = 115 / Math.max(alto, 1);
-    const corteza = new THREE.MeshLambertMaterial({ color: 0x916343 });
-    const hojas = new THREE.MeshLambertMaterial({ color: 0x47784c });
-    original.traverse(o => { if (o.isMesh) o.material = /tron|trunk/i.test(o.name) ? corteza : hojas; });
-    for (const [c, f] of [[5,5],[12,5],[20,5],[35,6],[40,12],[39,27],[15,30],[5,22]]) {
-      if(c<=0||f<=0||c>=MAPA_ANCHO-1||f>=MAPA_ALTO-1)continue;
-      const arbol = original.clone();
-      arbol.scale.setScalar(escala);
-      arbol.position.set(c * TAMAÑO_CELDA, -caja.min.y * escala, f * TAMAÑO_CELDA);
-      arbol.updateMatrix();
-      arbol.matrixAutoUpdate = false;
-      escena3D.add(arbol);
-    }
-  }, undefined, e => console.warn('No se pudo cargar el árbol', e));
-}
 function actualizarRendimiento() {
   muestrasFPS.push(deltaTime);
   if (muestrasFPS.length > 60) muestrasFPS.shift();

@@ -56,3 +56,7 @@ Mapa reducido de 48×39 a 36×31 (40,4 % menos celdas), conservando posiciones d
 Perfil local de Chromium/SwiftShader, mismo punto interior: promedio de 20 consultas de colisión de 16,785 a 1,185 ms; 50 consultas de piso de 0,476 a 0,058 ms. Estos tiempos miden consultas, no FPS en el equipo del jugador. El arranque general pasó de 62 a 54 llamadas de dibujo en la prueba existente.
 
 Prueba dedicada: 40 posiciones con piso y paredes equivalentes entre BVH y raycast original; nueve imágenes cargadas; nueve victorias disparan fichas con todos los campos y un único ingreso por captura; pausa de movimiento; décima captura y liberación por mochila llena; cierre devuelve la línea a reposo. Revisión visual de la ficha del Dragón. Se prueba también guardado de una captura desde la ficha con cuenta de Supabase local y recarga. Los sprites faltantes se resuelven por nombre para catálogos ya instalados, sin modificar cuentas ni requerir migración remota.
+
+## Diseño forestal de backend
+
+Prueba Chromium: 90 árboles interiores y tres capas de mallas instanciadas; borde sólido, colisión de troncos y lago, aparición despejada y al menos un punto transitable del puente sobre agua. Entrada/salida de la tienda y ausencia de errores JavaScript. La vista medida registró 56 llamadas de dibujo con el bosque cargado (523.104 triángulos); esto no garantiza FPS en otros equipos. Revisión visual del lago y de la tienda. Continuaron aprobados los ocho casos de lógica y el navegador general con los cinco minijuegos, controles, economía y guardado.

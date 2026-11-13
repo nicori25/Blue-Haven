@@ -721,9 +721,10 @@ function inicializarEscena3D() {
   escena3D.background = texturaCielo;
 
   // Niebla para profundidad (estilo retro)
-  escena3D.fog = new THREE.Fog(0xc8e8f8, TAMAÑO_CELDA * 15, TAMAÑO_CELDA * 65);
+  escena3D.fog = new THREE.Fog(0xc8e8f8, TAMAÑO_CELDA * 12, TAMAÑO_CELDA * 38);
 
   inicializarTexturasSuelo();
+  crearEntornoExterior();
 
   const cargador = new THREE.TextureLoader();
 
@@ -1756,6 +1757,7 @@ let texturaSueloCargada = false;
 function clasificarTerreno(f, c) {
   if (f < 0 || c < 0 || f >= MAPA_ALTO || c >= MAPA_ANCHO) return "pared";
   if (MAPA[f][c] === 1) return "pared";
+  if (MAPA[f][c] === 4) return "pasto";
   if (MAPA[f][c] === 3) return "agua";
   if (MAPA[f][c] === 2) return "arena";
   if (obtenerSuelo(f, c) === 5) return "tierra";
