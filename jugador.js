@@ -89,10 +89,11 @@ class Jugador {
     // Bloquear movimiento mientras la enciclopedia está abierta
     if (typeof ENCICLOPEDIA !== 'undefined' && ENCICLOPEDIA.abierta) return;
 
-    if (teclaJuegoPresionada(87)) this.mover(1);
-    if (teclaJuegoPresionada(83)) this.mover(-1);
-    if (teclaJuegoPresionada(65)) this.moverLateral(-1);
-    if (teclaJuegoPresionada(68)) this.moverLateral(1);
+    const analogico=window.ControlTactil?.analogico||{x:0,y:0};
+    let avance=(teclaJuegoPresionada(87)?1:0)-(teclaJuegoPresionada(83)?1:0)-analogico.y;
+    let lateral=(teclaJuegoPresionada(68)?1:0)-(teclaJuegoPresionada(65)?1:0)+analogico.x;
+    const magnitud=Math.hypot(avance,lateral);if(magnitud>1){avance/=magnitud;lateral/=magnitud;}
+    if(avance)this.mover(avance);if(lateral)this.moverLateral(lateral);
     if (teclaJuegoPresionada(UP_ARROW)) this.mirar(1);
     if (teclaJuegoPresionada(DOWN_ARROW)) this.mirar(-1);
 
