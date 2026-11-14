@@ -137,6 +137,7 @@ function draw() {
     actualizarAnimacionCañaTienda();
   }
 
+  actualizarCartelRanking();
   renderizador3D.render(escena3D, camara3D);
 
   if (!guiaActiva && !interfazBloqueada()) {

@@ -80,3 +80,9 @@ La política privada de denegación explícita eliminó el aviso nuevo de RLS si
 ## Analógico y barras discretas
 
 Doce pruebas de lógica y la suite móvil de Chromium aprobadas. Se verificaron movimiento y mirada con dos dedos, velocidad parcial, límite circular de intensidad, cancelación y reutilización del analógico después de toques fuera del control; no se captura el cursor ni se abre Ajustes. Los cinco minijuegos, notas sostenidas simultáneas, menús y rotación siguen aprobados. En registro a 390×480 el contenido largo conserva desplazamiento con barras ocultas. Validación con pantalla táctil emulada; pendiente comprobación en un teléfono físico.
+
+## Cartel flotante de ranking junto a la tienda
+
+El HUD ya no contiene el botón Ranking. Un cartel anclado al mundo se proyecta junto a la tienda, muestra los primeros tres puestos por dinero/capturas y permite abrir el Top 20 al acercarse mediante toque, clic o R. Solo se consulta al verlo cerca y como máximo una vez por minuto; el movimiento no genera solicitudes. Se oculta fuera de cámara, durante menús/pesca y al cerrar sesión. La oclusión de las paredes usa el BVH existente de la tienda.
+
+Prueba Chromium: ausencia de consultas lejos, dos consultas iniciales, listas dobles, proyección vertical/horizontal inspeccionada, toque aun cuando lo cubre la zona táctil de cámara, R cercano, rechazo de R lejos/fuera de cámara, ausencia de consultas por cuadro y limpieza al salir. También se verifican los minijuegos táctiles y la clasificación con cuenta. Sin cambios de SQL ni permisos de Supabase.
