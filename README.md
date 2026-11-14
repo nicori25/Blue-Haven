@@ -140,3 +140,17 @@ Los botones táctiles se activan automáticamente en pantallas táctiles y tambi
 Los minijuegos mantienen un espacio de dibujo consistente al girar el teléfono. La enciclopedia táctil usa un selector y conserva las fichas bloqueadas hasta descubrirlas. Los controles se sueltan al abrir un panel, perder foco o cancelar un toque.
 
 Las barras de desplazamiento están ocultas en todas las pantallas; el contenido largo sigue desplazándose con el dedo, la rueda o el teclado. El analógico vuelve al centro al soltar, cancelar el gesto, girar el teléfono o abrir un panel.
+
+## Multijugador: salas privadas
+
+Con una cuenta iniciada, pulsá **Multijugador → Crear sala privada** y compartí el código de 12 caracteres. Tus amigos abren **Multijugador**, pegan el código y eligen **Unirme**. Cada sala admite hasta **4 cuentas**; el invitado sigue siendo individual. Volver al juego cierra el panel y mantiene la sala. **Salir de la sala** vuelve al modo individual sin cerrar sesión.
+
+Se ven los nombres, colores, posiciones, orientación, salto, agachado y animaciones de caminar/pescar. La pesca, los minijuegos, equipo, inventario, dinero y guardado siguen siendo individuales. Esta versión es cooperativa social: no incluye intercambios, peces compartidos, chat ni competencias.
+
+Las posiciones viajan por canales privados de Supabase Realtime (hasta 8 envíos por segundo al moverse, 1 al estar quieto), con interpolación visual. Solo se consultan membresías cada 12 segundos y ante cambios de presencia; no se guardan posiciones en PostgreSQL. La admisión se valida en el servidor y serializa el acceso a las cuatro plazas. Los mensajes de posición son cosméticos y no se usan para conceder dinero o capturas; una sala entre amigos no es un servidor competitivo con validación de movimiento.
+
+La conexión se reintenta automáticamente. La sala vence a las 24 horas; una ausencia sin salida explícita libera la plaza a los 75 segundos. Si vence tu conexión, podés volver a unirte con el código. Cerrar sesión sale de la sala y conserva el progreso. Para mantener una sesión por cuenta, usá cuentas distintas en cada dispositivo.
+
+Instalaciones nuevas: `supabase/instalar.sql` incluye las tablas privadas, la RPC `bh_sala` y las políticas de Realtime. Instalaciones existentes: aplicar en orden `supabase/migrations/20261113234229_salas_multijugador.sql` y `supabase/migrations/20261113235843_salas_orden_bloqueos.sql`. No requiere claves secretas en el navegador. Realtime comprueba las membresías al autorizar el canal; sus permisos se almacenan en caché durante la conexión, por lo que la sala es para personas que ya recibieron su código de invitación.
+
+Pruebas: `npm run test:supabase` verifica admisión concurrente, cupo, aislamiento y salida sobre PostgreSQL/Auth reales locales. `node tests/multijugador-browser.cjs` verifica el transporte real en una instancia con Realtime usando `SUPABASE_TEST_URL`, `SUPABASE_TEST_ANON_KEY` y `MULTIPLAYER_FIXTURE` (JSON privado con `password` y `usuarios: [{email}]`, mínimo cinco cuentas efímeras precreadas). Rechaza conexiones remotas sin `ALLOW_REMOTE_TESTS=1`. Nunca usar cuentas personales ni subir ese archivo al repositorio.

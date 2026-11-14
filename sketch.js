@@ -137,6 +137,7 @@ function draw() {
     actualizarAnimacionCañaTienda();
   }
 
+  window.Multijugador?.actualizar(Math.min(deltaTime/1000,.1));
   renderizador3D.render(escena3D, camara3D);
 
   if (!guiaActiva && !interfazBloqueada()) {
