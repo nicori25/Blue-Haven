@@ -187,3 +187,7 @@ Pruebas locales: `tests/chat-api.cjs`, `tests/chat-retencion.sql` y `tests/chat-
 La interfaz usa azul profundo, verde agua y tonos crema/dorados. Tienda, mochila y ranking tienen paneles de madera hechos con gradientes estáticos; ajustes, salas y chat usan fondos oscuros suaves. Los títulos cortos usan la fuente pixelada local **Press Start 2P**, de CodeMan38, distribuida bajo SIL Open Font License 1.1 (licencia en `textures/fuentes/PressStart2P-OFL.txt`). Los textos largos y formularios usan la tipografía del sistema para facilitar la lectura.
 
 Los botones tienen relieve, estado de pulsación y foco dorado para teclado. Se mantiene el brillo por rareza en las capturas, con transiciones cortas y respeto por `prefers-reduced-motion`. No se aplican filtros a la escena 3D ni desenfoques de fondo en los paneles. El tema está en `tema-lago.css`, separado de los estilos de estructura y controles, y se incluye con la fuente en la descarga sin conexión.
+
+## Estabilidad de texturas
+
+La cámara usa un plano cercano de 1 unidad (1/64 de celda) para mantener precisión de profundidad en el mapa. El alcance lejano se conserva. Suelo y agua mantienen ampliación por vecino más cercano para conservar el pixel art; al alejarse usan mipmaps y mezcla entre niveles, evitando el ruido que parece parpadeo al moverse. En WebGL1, el agua con dimensiones no POT usa filtrado de reducción compatible sin forzar cambios de tamaño. No se desactiva la prueba de profundidad del mundo ni se cambian las colisiones.

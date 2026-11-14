@@ -117,3 +117,9 @@ La revisión automática rechazó crear cuentas de prueba en la instancia de pro
 Revisión visual de acceso, tienda, ajustes y chat en 390×844 y 1100×820. Fuente pixelada local cargada, títulos cortos separados de los textos de lectura, paneles de madera con gradientes estáticos y botones con relieve/foco dorado. La captura conserva los colores y el brillo por rareza; la tipografía se mantiene legible en los formularios.
 
 Pruebas de tienda y nueve capturas aprobadas con el tema. Se comprueban además ajustes, controles táctiles y caché instalable en CI. El tema desactiva sus animaciones y transiciones con movimiento reducido y no añade filtros al renderer 3D. No se hizo una medición de FPS en teléfonos físicos.
+
+## Precisión de profundidad y parpadeo de agua/suelo
+
+Sonda WebGL con dos planos próximos y orden de dibujo invertido: el plano cercano anterior (0,01) alternaba el píxel entre verde/magenta; con near=1 se mantiene verde en ambos órdenes. Se conserva far=5120 y la profundidad del mundo. Una textura de prueba de alta frecuencia reducida arroja desviación 127,5 sin mipmaps y 0 con el filtrado nuevo; al ampliarla no aparecen colores intermedios, conservando el aspecto pixelado.
+
+Se comprueba la configuración NPOT compatible con WebGL1, las texturas reales del agua/terreno y que ninguna parte visible de las tres cañas cruce el plano cercano en reposo y tres fases de lanzamiento. Inspección visual del lago, suelo y tienda. Pruebas de bosque, colisiones, puente, tienda y controles móviles aprobadas. No se midió el resultado en el dispositivo físico donde se reportó el fallo.

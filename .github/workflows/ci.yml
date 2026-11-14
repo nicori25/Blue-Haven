@@ -28,6 +28,7 @@ jobs:
       - run: npm run test:settings
       - run: npm run test:captures
       - run: npm run test:forest
+      - run: node tests/depth-browser.cjs
       - run: npm run test:mobile
       - run: node tests/ranking-sign-browser.cjs
       - run: npm run test:pwa
