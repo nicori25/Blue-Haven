@@ -85,6 +85,7 @@ function volverAlAcceso(mensaje = '') {
   window.AudioJuego?.pausar();
   window.ControlTactil?.soltarTodo();
   document.getElementById('ranking')?.close();
+  document.getElementById('cartel-ranking')?.setAttribute('hidden','');
   document.getElementById('libro-movil')?.close();
   if (typeof noLoop === 'function' && window.juegoPreparado) noLoop();
   if (document.pointerLockElement) document.exitPointerLock();
