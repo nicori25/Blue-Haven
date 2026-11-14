@@ -81,6 +81,7 @@ function volverAlAcceso(mensaje = '') {
   window.partidaId++;
   window.Multijugador?.desconectar();
   document.getElementById('multijugador')?.close();
+  document.getElementById('instalar-app')?.close();
   window.AudioJuego?.pausar();
   window.ControlTactil?.soltarTodo();
   document.getElementById('ranking')?.close();

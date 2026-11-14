@@ -154,3 +154,19 @@ La conexión se reintenta automáticamente. La sala vence a las 24 horas; una au
 Instalaciones nuevas: `supabase/instalar.sql` incluye las tablas privadas, la RPC `bh_sala` y las políticas de Realtime. Instalaciones existentes: aplicar en orden `supabase/migrations/20261113234229_salas_multijugador.sql` y `supabase/migrations/20261113235843_salas_orden_bloqueos.sql`. No requiere claves secretas en el navegador. Realtime comprueba las membresías al autorizar el canal; sus permisos se almacenan en caché durante la conexión, por lo que la sala es para personas que ya recibieron su código de invitación.
 
 Pruebas: `npm run test:supabase` verifica admisión concurrente, cupo, aislamiento y salida sobre PostgreSQL/Auth reales locales. `node tests/multijugador-browser.cjs` verifica el transporte real en una instancia con Realtime usando `SUPABASE_TEST_URL`, `SUPABASE_TEST_ANON_KEY` y `MULTIPLAYER_FIXTURE` (JSON privado con `password` y `usuarios: [{email}]`, mínimo cinco cuentas efímeras precreadas). Rechaza conexiones remotas sin `ALLOW_REMOTE_TESTS=1`. Nunca usar cuentas personales ni subir ese archivo al repositorio.
+
+## Instalar en el celular
+
+Abrí https://nicori25.github.io/Blue-Haven/ y pulsá **Instalar en el celular** en el acceso o **Ajustes → Instalar / actualizar juego** dentro del juego.
+
+- **Android:** si el navegador ofrece instalación, pulsá **Instalar Blue Haven** y confirmá. También podés usar el menú de Chrome → Instalar aplicación / Agregar a pantalla de inicio.
+- **iPhone/iPad:** abrilo en Safari → Compartir → Agregar a pantalla de inicio → Agregar. Dejá activado «Abrir como app» si aparece.
+- Si lo abriste dentro de una app de mensajes o redes, primero abrilo en el navegador del celular.
+
+Es una PWA: usa el juego principal, se instala desde la web y se abre en una ventana independiente con su propio ícono. No requiere publicar en una tienda ni instalar un APK. El progreso de cuentas sigue guardándose en Supabase. Safari puede usar almacenamiento independiente para la app instalada; el invitado se guarda en cada instalación/navegador y no se transfiere entre dispositivos.
+
+En la primera visita se guardan los archivos públicos del juego (aproximadamente 7 MB). Esperá el mensaje **Archivos guardados** antes de salir de internet. Después se puede abrir y jugar como invitado sin conexión, incluidos modelos, sprites, audio y progreso local. Login/registro, guardado de cuentas, ranking y multijugador requieren internet. El navegador puede eliminar los archivos y el progreso local si se borra su almacenamiento o falta espacio; las partidas de cuentas permanecen en Supabase.
+
+Las actualizaciones se preparan en segundo plano. Un punto en Ajustes y el botón **Actualización disponible** llevan a la opción **Actualizar y reiniciar**; el juego no se recarga solo en medio de una pesca. Se conserva la versión anterior en caché para otras pestañas. Nunca se cachean respuestas de Auth, datos personales, RPC ni WebSockets.
+
+Al modificar archivos del juego, ejecutar `npm run build:pwa` y subir también `pwa-assets.js`. La lista y la versión de caché se generan desde el contenido y CI verifica que estén actualizadas. El service worker usa rutas relativas y su alcance es solo el directorio de Blue Haven, compatible con GitHub Pages y otros proyectos del mismo dominio. HTTPS es obligatorio salvo en localhost. `npm run test:pwa` prueba instalación, recursos, invitado offline, actualizaciones y alcance en `/Blue-Haven/` con Chromium.
