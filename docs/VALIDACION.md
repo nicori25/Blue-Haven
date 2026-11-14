@@ -96,3 +96,9 @@ Chromium con pantalla táctil emulada y servidor en `/Blue-Haven/`: manifiesto l
 Red desactivada de verdad en el contexto: se abre la página, inicia el invitado, cargan sprites y modelo de tienda y se recuperan dinero/mochila después de recargar. Las respuestas dinámicas de un endpoint del mismo origen no se cachean. Se simuló otra versión del manifiesto de recursos: queda esperando, la partida continúa y solo al pulsar Actualizar y reiniciar se activa; el progreso de invitado permanece. Las APIs de Supabase y los WebSockets están fuera del alcance de caché.
 
 Aprobadas también las doce pruebas de lógica y la suite táctil con los cinco minijuegos. No se hizo una instalación física en Android/iOS ni se verificaron diálogos nativos del sistema operativo; su disponibilidad depende del navegador. El almacenamiento del invitado puede ser independiente entre Safari y la app de iOS, y el navegador puede eliminar caché/progreso local al borrar datos o necesitar espacio.
+
+## Cartel flotante de ranking junto a la tienda
+
+El HUD ya no contiene el botón Ranking. Un cartel anclado al mundo se proyecta junto a la tienda, muestra los primeros tres puestos por dinero/capturas y permite abrir el Top 20 al acercarse mediante toque, clic o R. Solo se consulta al verlo cerca y como máximo una vez por minuto; el movimiento no genera solicitudes. Se oculta fuera de cámara, durante menús/pesca y al cerrar sesión. La oclusión de las paredes usa el BVH existente de la tienda.
+
+Prueba Chromium: ausencia de consultas lejos, dos consultas iniciales, listas dobles, proyección vertical/horizontal inspeccionada, toque aun cuando lo cubre la zona táctil de cámara, R cercano, rechazo de R lejos/fuera de cámara, ausencia de consultas por cuadro y limpieza al salir. También se verifican los minijuegos táctiles y la clasificación con cuenta. Sin cambios de SQL ni permisos de Supabase.

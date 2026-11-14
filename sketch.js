@@ -138,6 +138,7 @@ function draw() {
   }
 
   window.Multijugador?.actualizar(Math.min(deltaTime/1000,.1));
+  actualizarCartelRanking();
   renderizador3D.render(escena3D, camara3D);
 
   if (!guiaActiva && !interfazBloqueada()) {

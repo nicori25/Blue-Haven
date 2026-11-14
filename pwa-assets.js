@@ -1,5 +1,5 @@
 // Generado con npm run build:pwa. Solo recursos públicos del juego.
-self.BLUEHAVEN_VERSION="dec85e575603f05e";
+self.BLUEHAVEN_VERSION="4ee5233dd1888fa6";
 self.BLUEHAVEN_ARCHIVOS=[
   "./audio.js",
   "./auth.js",
