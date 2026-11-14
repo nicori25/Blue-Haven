@@ -36,6 +36,7 @@ jobs:
           export SUPABASE_TEST_URL=http://127.0.0.1:54321
           export SUPABASE_TEST_ANON_KEY="$(node tests/supabase/token.cjs)"
           node tests/supabase-browser.cjs
+          CHAT_FAKE_REALTIME=1 node tests/chat-browser.cjs
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

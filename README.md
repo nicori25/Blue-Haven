@@ -145,7 +145,7 @@ Las barras de desplazamiento están ocultas en todas las pantallas; el contenido
 
 Con una cuenta iniciada, pulsá **Multijugador → Crear sala privada** y compartí el código de 12 caracteres. Tus amigos abren **Multijugador**, pegan el código y eligen **Unirme**. Cada sala admite hasta **4 cuentas**; el invitado sigue siendo individual. Volver al juego cierra el panel y mantiene la sala. **Salir de la sala** vuelve al modo individual sin cerrar sesión.
 
-Se ven los nombres, colores, posiciones, orientación, salto, agachado y animaciones de caminar/pescar. La pesca, los minijuegos, equipo, inventario, dinero y guardado siguen siendo individuales. Esta versión es cooperativa social: no incluye intercambios, peces compartidos, chat ni competencias.
+Se ven los nombres, colores, posiciones, orientación, salto, agachado y animaciones de caminar/pescar. La pesca, los minijuegos, equipo, inventario, dinero y guardado siguen siendo individuales. Esta versión es cooperativa social: no incluye intercambios, peces compartidos ni competencias.
 
 Las posiciones viajan por canales privados de Supabase Realtime (hasta 8 envíos por segundo al moverse, 1 al estar quieto), con interpolación visual. Solo se consultan membresías cada 12 segundos y ante cambios de presencia; no se guardan posiciones en PostgreSQL. La admisión se valida en el servidor y serializa el acceso a las cuatro plazas. Los mensajes de posición son cosméticos y no se usan para conceder dinero o capturas; una sala entre amigos no es un servidor competitivo con validación de movimiento.
 
@@ -170,3 +170,14 @@ En la primera visita se guardan los archivos públicos del juego (aproximadament
 Las actualizaciones se preparan en segundo plano. Un punto en Ajustes y el botón **Actualización disponible** llevan a la opción **Actualizar y reiniciar**; el juego no se recarga solo en medio de una pesca. Se conserva la versión anterior en caché para otras pestañas. Nunca se cachean respuestas de Auth, datos personales, RPC ni WebSockets.
 
 Al modificar archivos del juego, ejecutar `npm run build:pwa` y subir también `pwa-assets.js`. La lista y la versión de caché se generan desde el contenido y CI verifica que estén actualizadas. El service worker usa rutas relativas y su alcance es solo el directorio de Blue Haven, compatible con GitHub Pages y otros proyectos del mismo dominio. HTTPS es obligatorio salvo en localhost. `npm run test:pwa` prueba instalación, recursos, invitado offline, actualizaciones y alcance en `/Blue-Haven/` con Chromium.
+
+
+## Chat entre jugadores
+
+Al entrar a una sala aparece **💬 Chat** en la barra del juego. También podés abrirlo con **T**; escribí y pulsá **Enviar** o Enter. **Esc** o Volver al lago cierran el panel. Mientras escribís se bloquean el movimiento y las acciones del juego; en celular el panel se adapta al espacio del teclado. El botón muestra los mensajes sin leer.
+
+Solo los miembros conectados de esa sala pueden enviar y leer sus últimos **50 mensajes**. El nombre lo asigna el servidor desde la cuenta; los mensajes no admiten HTML activo y se filtran palabras ofensivas tanto en el cliente como en Supabase. Límite: 280 caracteres y un envío por segundo. Los reintentos recientes no duplican el mensaje. Al salir se limpian el historial y el borrador de ese dispositivo; los mensajes de la sala se eliminan cuando se elimina la sala. No hay chat global ni acceso como invitado, y requiere internet.
+
+La RPC autenticada verifica membresía y entrega el contenido. Realtime envía solo avisos privados sin texto; el navegador vuelve a consultar los mensajes verificados, por lo que falsificar un aviso no permite suplantar autores. Hay consulta de respaldo al reconectar y al tener abierto el chat. La caché de la app no guarda respuestas del chat. La instalación completa incluye `20261114021514_chat_salas.sql`.
+
+Pruebas locales: `tests/chat-api.cjs`, `tests/chat-retencion.sql` y `tests/chat-browser.cjs` (dos cuentas, API real y transporte de avisos simulado con `CHAT_FAKE_REALTIME=1` sobre el stack mínimo). El script del navegador admite una instancia real de Realtime con cuentas efímeras precreadas mediante `CHAT_FIXTURE`; nunca usar cuentas personales ni subir credenciales al repositorio.

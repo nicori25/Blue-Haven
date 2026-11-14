@@ -1,4 +1,4 @@
-/* Salas de cuatro: Realtime transporta solo el aspecto del jugador, nunca economía. */
+/* Salas de cuatro: Realtime transporta posiciones y avisos de chat, nunca economía. */
 (() => {
  const colores=[0x75cfbd,0xe6ac66,0x9eabef,0xe88eaf];
  const panel=document.createElement('dialog');panel.id='multijugador';panel.setAttribute('aria-labelledby','sala-titulo');
@@ -7,12 +7,14 @@
  const el=id=>document.getElementById(id);
  let cliente=crypto.randomUUID();try{cliente=sessionStorage.getItem('BH_SALA_CLIENTE')||cliente;sessionStorage.setItem('BH_SALA_CLIENTE',cliente)}catch(_){}
  let sala=null,canal=null,fase='solo',mensaje='',ocupado=false,generacion=0,latido=null,envio=null,consultando=false,ultimaConsulta=0,ultimoEnvio=0,ultimaPose='',secuencia=0;
+ const chat=crearChatSala({cliente,getSala:()=>sala,getFase:()=>fase});
  const avatares=new Map(),online=new Set(),ultimas=new Map();
  // Geometrías compartidas: tres personajes agregan pocas mallas sin modelos pesados.
  let geometria,materiales;
  const estado={get sala(){return sala},get fase(){return fase},get jugadoresVisibles(){return avatares.size}};
  window.Multijugador=Object.freeze({actualizar,desconectar,abrir,estado});
  function ui(){
+  chat.actualizarEstado();
   const activa=!!sala;el('sala-acceso').hidden=activa||window.modoInvitado;el('sala-dentro').hidden=!activa;
   el('sala-mensaje').textContent=window.modoInvitado?'Iniciá sesión con una cuenta para crear o unirte a una sala. Tu partida de invitado sigue siendo individual.':mensaje;
   el('sala-crear').disabled=el('sala-unir').disabled=ocupado;el('sala-salir').disabled=ocupado;
@@ -26,7 +28,7 @@
  function quitarAvatar(id){const a=avatares.get(id);if(!a)return;escena3D.remove(a.grupo);a.etiqueta.material.map.dispose();a.etiqueta.material.dispose();avatares.delete(id);ultimas.delete(id);}
  function limpiar(){for(const id of avatares.keys())quitarAvatar(id);online.clear();ultimas.clear();}
  async function desconectar(avisar=true){
-  ++generacion;clearInterval(latido);clearInterval(envio);latido=envio=null;const anterior=canal,tenia=!!sala;canal=null;sala=null;fase='solo';ultimaPose='';ultimoEnvio=0;consultando=false;limpiar();
+  ++generacion;clearInterval(latido);clearInterval(envio);latido=envio=null;const anterior=canal,tenia=!!sala;canal=null;sala=null;fase='solo';ultimaPose='';ultimoEnvio=0;consultando=false;limpiar();chat.limpiar();
   // Iniciar la salida con la sesión vigente, antes de logout. El lease cubre cierres abruptos.
   const salida=avisar&&tenia?BaseDatos.sala('salir','',cliente).catch(()=>null):Promise.resolve();
   if(anterior)BaseDatos.cerrarCanalSala(anterior).catch(()=>{});ui();await salida;
@@ -40,6 +42,7 @@
    const actual=await BaseDatos.canalSala(datos.canal,datos.yo);
    if(turno!==generacion){BaseDatos.cerrarCanalSala(actual);return;}
    canal=actual;
+   actual.on('broadcast',{event:'chat_aviso'},()=>{if(canal===actual)chat.avisar()});
    actual.on('broadcast',{event:'pose'},({payload})=>recibir(payload));
    actual.on('presence',{event:'sync'},()=>{
     if(canal!==actual)return;online.clear();for(const id of Object.keys(actual.presenceState()))online.add(id);
@@ -49,7 +52,7 @@
    actual.subscribe(async status=>{
     if(canal!==actual)return;
     if(status==='SUBSCRIBED'){
-     fase='conectado';ui();await actual.track({conectado:true});if(canal===actual){consultar(true);enviar(true);}
+     fase='conectado';ui();chat.iniciar();await actual.track({conectado:true});if(canal===actual){consultar(true);enviar(true);}
     }else if(['CHANNEL_ERROR','TIMED_OUT','CLOSED'].includes(status)){fase='reconectando';limpiar();ui();}
    });
    latido=setInterval(()=>consultar(true),12000);envio=setInterval(()=>enviar(),125);
@@ -59,7 +62,7 @@
  async function consultar(forzar=false){
   if(!sala||consultando||(!forzar&&Date.now()-ultimaConsulta<1000))return;
   const turno=generacion;consultando=true;ultimaConsulta=Date.now();
-  try{const datos=await BaseDatos.sala('estado','',cliente);if(turno!==generacion)return;sala=datos;if(canal?.state==='joined')fase='conectado';for(const id of avatares.keys())if(!datos.jugadores.some(j=>j.id===id))quitarAvatar(id);ui();}
+  try{const datos=await BaseDatos.sala('estado','',cliente);if(turno!==generacion)return;sala=datos;if(canal?.state==='joined')fase='conectado';for(const id of avatares.keys())if(!datos.jugadores.some(j=>j.id===id))quitarAvatar(id);ui();chat.cargar();}
   catch(err){if(turno!==generacion)return;if(/cerró|venció|otra pestaña|sesión/.test(err.message)){mensaje=err.message;await desconectar();}else{fase='reconectando';limpiar();ui();}}
   finally{if(turno===generacion)consultando=false;}
  }

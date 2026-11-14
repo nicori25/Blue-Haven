@@ -102,3 +102,12 @@ Aprobadas también las doce pruebas de lógica y la suite táctil con los cinco 
 El HUD ya no contiene el botón Ranking. Un cartel anclado al mundo se proyecta junto a la tienda, muestra los primeros tres puestos por dinero/capturas y permite abrir el Top 20 al acercarse mediante toque, clic o R. Solo se consulta al verlo cerca y como máximo una vez por minuto; el movimiento no genera solicitudes. Se oculta fuera de cámara, durante menús/pesca y al cerrar sesión. La oclusión de las paredes usa el BVH existente de la tienda.
 
 Prueba Chromium: ausencia de consultas lejos, dos consultas iniciales, listas dobles, proyección vertical/horizontal inspeccionada, toque aun cuando lo cubre la zona táctil de cámara, R cercano, rechazo de R lejos/fuera de cámara, ausencia de consultas por cuadro y limpieza al salir. También se verifican los minijuegos táctiles y la clasificación con cuenta. Sin cambios de SQL ni permisos de Supabase.
+
+
+## Chat privado de sala
+
+Auth/PostgreSQL/PostgREST locales reales: membresía y cliente vigentes, aislamiento entre salas, nombres asignados por el servidor, campos públicos mínimos, lectura anónima rechazada, límite de frecuencia, texto vacío/largo/ofensivo rechazado, reintento sin duplicar y denegación después de salir. Transacción local con rollback: 60 envíos dejan 50 mensajes; cada escritura emite un aviso privado al canal correcto y sin texto; los roles no tienen acceso directo a la tabla.
+
+Dos navegadores con cuentas locales y RPC reales: enviar/leer, nombre propio, aviso de mensaje no leído, T, bloqueo de movimiento al escribir, rechazo de ofensas, HTML mostrado como texto y limpieza entre salas. Transporte de avisos simulado; un aviso con texto falsificado se ignora y el contenido se vuelve a leer del servidor. Vista de celular y altura reducida para teclado verificadas. La migración está aplicada en Supabase alojado y se comprobó con consultas de solo lectura que existe la función de Broadcast y que no hay acceso anónimo/directo a los mensajes.
+
+La revisión automática rechazó crear cuentas de prueba en la instancia de producción; se continuó con la alternativa local. No se validó esta entrega con dos cuentas reales en el WebSocket de producción ni con teléfonos físicos.
