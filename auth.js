@@ -79,6 +79,8 @@ async function ocultarAuthYArrancar(errorEl) {
 }
 function volverAlAcceso(mensaje = '') {
   window.partidaId++;
+  window.Multijugador?.desconectar();
+  document.getElementById('multijugador')?.close();
   window.AudioJuego?.pausar();
   window.ControlTactil?.soltarTodo();
   document.getElementById('ranking')?.close();
@@ -103,6 +105,7 @@ function volverAlAcceso(mensaje = '') {
 botonLogout.addEventListener('click', async () => {
   botonLogout.disabled = true;
   try {
+    await window.Multijugador?.desconectar();
     if (!window.modoInvitado) await BaseDatos.salir();
     volverAlAcceso();
   } catch (err) { estadoGuardado('No se pudo cerrar sesión: ' + err.message); }
