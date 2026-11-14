@@ -45,7 +45,7 @@ Abrí `http://localhost:8080`. Este contenedor solo sirve archivos; los datos es
 | Guía de pesca | Q o botón inferior derecho |
 | Ajustes / cerrar el panel abierto | Escape |
 | Liberar o capturar el cursor | P |
-| Ranking | R o botón 🏆 |
+| Ranking | Cartel junto a la tienda: tocar/clic o R al acercarse |
 | Ritmo | A/S/D o Z/X/C |
 
 Acercate a la tienda y presioná E para entrar, incluso sin peces. Elegí Comprar o Vender; el panel permite seguir explorando el interior o salir. Con I podés cambiar tu equipo desde cualquier lugar.
