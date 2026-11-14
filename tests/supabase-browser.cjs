@@ -6,7 +6,7 @@ if (!url || !key || !['localhost','127.0.0.1'].includes(new URL(url).hostname)) 
 (async () => {
   const browser = await chromium.launch({...(process.env.CHROMIUM_PATH ? {executablePath:process.env.CHROMIUM_PATH} : {}), args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
   try {
-    const page = await browser.newPage({viewport:{width:800,height:450}});
+    const page = await browser.newPage({serviceWorkers:'block',viewport:{width:800,height:450}});
     page.setDefaultTimeout(60000);
     const errors=[]; page.on('pageerror',e=>errors.push(e.message));
     await page.route('**/config.js',r=>r.fulfill({contentType:'application/javascript',body:'window.BLUEHAVEN_CONFIG='+JSON.stringify({supabaseUrl:url,supabaseKey:key})}));

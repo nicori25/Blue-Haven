@@ -17,6 +17,8 @@ jobs:
       - run: git diff --exit-code -- libraries/supabase.min.js
       - run: npm run db:seed
       - run: git diff --exit-code -- supabase/seed.sql supabase/instalar.sql
+      - run: npm run build:pwa
+      - run: git diff --exit-code -- pwa-assets.js
       - run: npm test
       - run: npx playwright install --with-deps chromium
       - run: npm run test:supabase
@@ -27,6 +29,7 @@ jobs:
       - run: npm run test:captures
       - run: npm run test:forest
       - run: npm run test:mobile
+      - run: npm run test:pwa
       - name: Probar cuentas en navegador con Supabase local
         run: |
           export SUPABASE_TEST_URL=http://127.0.0.1:54321

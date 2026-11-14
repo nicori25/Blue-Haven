@@ -6,7 +6,7 @@ const url=process.env.SUPABASE_TEST_URL,key=process.env.SUPABASE_TEST_ANON_KEY;
 if(!url||(!['localhost','127.0.0.1'].includes(new URL(url).hostname)&&process.env.ALLOW_REMOTE_TESTS!=='1'))throw Error('Usá una instancia de pruebas o habilitá explícitamente las cuentas efímeras remotas.');
 (async()=>{const browser=await chromium.launch({...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),...(process.env.TEST_PROXY?{proxy:{server:process.env.TEST_PROXY,bypass:'localhost,127.0.0.1'}}:{}),args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});const externos=[],paginas=[],errores=[];try{
  for(let i=0;i<2;i++){
-  const ctx=await browser.newContext({viewport:i?{width:960,height:540}:{width:390,height:844},hasTouch:true,isMobile:!i});
+  const ctx=await browser.newContext({serviceWorkers:'block',viewport:i?{width:960,height:540}:{width:390,height:844},hasTouch:true,isMobile:!i});
   const p=await ctx.newPage();p.setDefaultTimeout(60000);p.on('pageerror',e=>errores.push(e.message));
   await p.route('**/config.js',r=>r.fulfill({contentType:'application/javascript',body:'window.BLUEHAVEN_CONFIG='+JSON.stringify({supabaseUrl:url,supabaseKey:key})}));
   await p.goto(process.env.TEST_URL||'http://127.0.0.1:8080');await p.waitForFunction(()=>window.juegoPreparado);
