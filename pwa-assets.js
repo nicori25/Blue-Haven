@@ -1,5 +1,5 @@
 // Generado con npm run build:pwa. Solo recursos públicos del juego.
-self.BLUEHAVEN_VERSION="4ee5233dd1888fa6";
+self.BLUEHAVEN_VERSION="428d52323a36eea8";
 self.BLUEHAVEN_ARCHIVOS=[
   "./audio.js",
   "./auth.js",
@@ -8,6 +8,7 @@ self.BLUEHAVEN_ARCHIVOS=[
   "./calidad.js",
   "./captura.js",
   "./catalogo.js",
+  "./chat-sala.js",
   "./chatbot.js",
   "./comercio.js",
   "./config.js",
