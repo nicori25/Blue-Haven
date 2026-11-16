@@ -28,7 +28,7 @@ begin
  return false;
 end;
 $$;
--- El chat de sala y los nombres ya utilizan texto_ofensivo. La guía también se valida al guardar.
+-- Los nombres utilizan texto_ofensivo. La guía también se valida al guardar.
 create function bluehaven_privado.validar_pregunta_chatbot() returns trigger
 language plpgsql security invoker set search_path='' as $$
 begin

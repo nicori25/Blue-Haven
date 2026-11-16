@@ -1,3 +1,5 @@
+> **Rama `version/sin-multijugador`:** versión individual completa basada en `main`. Conserva cuentas, progreso en Supabase, ranking, tienda, guía y PWA. No incluye salas, avatares remotos ni chat entre jugadores. El instalador SQL de esta rama prepara únicamente las funciones individuales. No hay que borrar tablas en una base que también usa la rama principal. Para probar esta versión, descargá esta rama y ejecutá el servidor local indicado abajo; el enlace público de GitHub Pages sigue mostrando `main`.
+
 # 🎣 Blue Haven
 
 Juego de pesca 3D educativo para navegador. Explorá el lago, capturá nueve especies, superá cinco familias de minijuegos, vendé tus capturas y mejorá tu caña.
@@ -141,20 +143,6 @@ Los minijuegos mantienen un espacio de dibujo consistente al girar el teléfono.
 
 Las barras de desplazamiento están ocultas en todas las pantallas; el contenido largo sigue desplazándose con el dedo, la rueda o el teclado. El analógico vuelve al centro al soltar, cancelar el gesto, girar el teléfono o abrir un panel.
 
-## Multijugador: salas privadas
-
-Con una cuenta iniciada, pulsá **Multijugador → Crear sala privada** y compartí el código de 12 caracteres. Tus amigos abren **Multijugador**, pegan el código y eligen **Unirme**. Cada sala admite hasta **4 cuentas**; el invitado sigue siendo individual. Volver al juego cierra el panel y mantiene la sala. **Salir de la sala** vuelve al modo individual sin cerrar sesión.
-
-Se ven los nombres, colores, posiciones, orientación, salto, agachado y animaciones de caminar/pescar. La pesca, los minijuegos, equipo, inventario, dinero y guardado siguen siendo individuales. Esta versión es cooperativa social: no incluye intercambios, peces compartidos ni competencias.
-
-Las posiciones viajan por canales privados de Supabase Realtime (hasta 8 envíos por segundo al moverse, 1 al estar quieto), con interpolación visual. Solo se consultan membresías cada 12 segundos y ante cambios de presencia; no se guardan posiciones en PostgreSQL. La admisión se valida en el servidor y serializa el acceso a las cuatro plazas. Los mensajes de posición son cosméticos y no se usan para conceder dinero o capturas; una sala entre amigos no es un servidor competitivo con validación de movimiento.
-
-La conexión se reintenta automáticamente. La sala vence a las 24 horas; una ausencia sin salida explícita libera la plaza a los 75 segundos. Si vence tu conexión, podés volver a unirte con el código. Cerrar sesión sale de la sala y conserva el progreso. Para mantener una sesión por cuenta, usá cuentas distintas en cada dispositivo.
-
-Instalaciones nuevas: `supabase/instalar.sql` incluye las tablas privadas, la RPC `bh_sala` y las políticas de Realtime. Instalaciones existentes: aplicar en orden `supabase/migrations/20261113234229_salas_multijugador.sql` y `supabase/migrations/20261113235843_salas_orden_bloqueos.sql`. No requiere claves secretas en el navegador. Realtime comprueba las membresías al autorizar el canal; sus permisos se almacenan en caché durante la conexión, por lo que la sala es para personas que ya recibieron su código de invitación.
-
-Pruebas: `npm run test:supabase` verifica admisión concurrente, cupo, aislamiento y salida sobre PostgreSQL/Auth reales locales. `node tests/multijugador-browser.cjs` verifica el transporte real en una instancia con Realtime usando `SUPABASE_TEST_URL`, `SUPABASE_TEST_ANON_KEY` y `MULTIPLAYER_FIXTURE` (JSON privado con `password` y `usuarios: [{email}]`, mínimo cinco cuentas efímeras precreadas). Rechaza conexiones remotas sin `ALLOW_REMOTE_TESTS=1`. Nunca usar cuentas personales ni subir ese archivo al repositorio.
-
 ## Instalar en el celular
 
 Abrí https://nicori25.github.io/Blue-Haven/ y pulsá **Instalar en el celular** en el acceso o **Ajustes → Instalar / actualizar juego** dentro del juego.
@@ -165,26 +153,16 @@ Abrí https://nicori25.github.io/Blue-Haven/ y pulsá **Instalar en el celular**
 
 Es una PWA: usa el juego principal, se instala desde la web y se abre en una ventana independiente con su propio ícono. No requiere publicar en una tienda ni instalar un APK. El progreso de cuentas sigue guardándose en Supabase. Safari puede usar almacenamiento independiente para la app instalada; el invitado se guarda en cada instalación/navegador y no se transfiere entre dispositivos.
 
-En la primera visita se guardan los archivos públicos del juego (aproximadamente 7 MB). Esperá el mensaje **Archivos guardados** antes de salir de internet. Después se puede abrir y jugar como invitado sin conexión, incluidos modelos, sprites, audio y progreso local. Login/registro, guardado de cuentas, ranking y multijugador requieren internet. El navegador puede eliminar los archivos y el progreso local si se borra su almacenamiento o falta espacio; las partidas de cuentas permanecen en Supabase.
+En la primera visita se guardan los archivos públicos del juego (aproximadamente 7 MB). Esperá el mensaje **Archivos guardados** antes de salir de internet. Después se puede abrir y jugar como invitado sin conexión, incluidos modelos, sprites, audio y progreso local. Login/registro, guardado de cuentas, y ranking requieren internet. El navegador puede eliminar los archivos y el progreso local si se borra su almacenamiento o falta espacio; las partidas de cuentas permanecen en Supabase.
 
 Las actualizaciones se preparan en segundo plano. Un punto en Ajustes y el botón **Actualización disponible** llevan a la opción **Actualizar y reiniciar**; el juego no se recarga solo en medio de una pesca. Se conserva la versión anterior en caché para otras pestañas. Nunca se cachean respuestas de Auth, datos personales, RPC ni WebSockets.
 
 Al modificar archivos del juego, ejecutar `npm run build:pwa` y subir también `pwa-assets.js`. La lista y la versión de caché se generan desde el contenido y CI verifica que estén actualizadas. El service worker usa rutas relativas y su alcance es solo el directorio de Blue Haven, compatible con GitHub Pages y otros proyectos del mismo dominio. HTTPS es obligatorio salvo en localhost. `npm run test:pwa` prueba instalación, recursos, invitado offline, actualizaciones y alcance en `/Blue-Haven/` con Chromium.
 
 
-## Chat entre jugadores
-
-Al entrar a una sala aparece **💬 Chat** en la barra del juego. También podés abrirlo con **T**; escribí y pulsá **Enviar** o Enter. **Esc** o Volver al lago cierran el panel. Mientras escribís se bloquean el movimiento y las acciones del juego; en celular el panel se adapta al espacio del teclado. El botón muestra los mensajes sin leer.
-
-Solo los miembros conectados de esa sala pueden enviar y leer sus últimos **50 mensajes**. El nombre lo asigna el servidor desde la cuenta; los mensajes no admiten HTML activo y se filtran palabras ofensivas tanto en el cliente como en Supabase. Límite: 280 caracteres y un envío por segundo. Los reintentos recientes no duplican el mensaje. Al salir se limpian el historial y el borrador de ese dispositivo; los mensajes de la sala se eliminan cuando se elimina la sala. No hay chat global ni acceso como invitado, y requiere internet.
-
-La RPC autenticada verifica membresía y entrega el contenido. Realtime envía solo avisos privados sin texto; el navegador vuelve a consultar los mensajes verificados, por lo que falsificar un aviso no permite suplantar autores. Hay consulta de respaldo al reconectar y al tener abierto el chat. La caché de la app no guarda respuestas del chat. La instalación completa incluye `20261114021514_chat_salas.sql`.
-
-Pruebas locales: `tests/chat-api.cjs`, `tests/chat-retencion.sql` y `tests/chat-browser.cjs` (dos cuentas, API real y transporte de avisos simulado con `CHAT_FAKE_REALTIME=1` sobre el stack mínimo). El script del navegador admite una instancia real de Realtime con cuentas efímeras precreadas mediante `CHAT_FIXTURE`; nunca usar cuentas personales ni subir credenciales al repositorio.
-
 ## Estilo visual: lago y madera
 
-La interfaz usa azul profundo, verde agua y tonos crema/dorados. Tienda, mochila y ranking tienen paneles de madera hechos con gradientes estáticos; ajustes, salas y chat usan fondos oscuros suaves. Los títulos cortos usan la fuente pixelada local **Press Start 2P**, de CodeMan38, distribuida bajo SIL Open Font License 1.1 (licencia en `textures/fuentes/PressStart2P-OFL.txt`). Los textos largos y formularios usan la tipografía del sistema para facilitar la lectura.
+La interfaz usa azul profundo, verde agua y tonos crema/dorados. Tienda, mochila y ranking tienen paneles de madera hechos con gradientes estáticos; ajustes y guía usan fondos oscuros suaves. Los títulos cortos usan la fuente pixelada local **Press Start 2P**, de CodeMan38, distribuida bajo SIL Open Font License 1.1 (licencia en `textures/fuentes/PressStart2P-OFL.txt`). Los textos largos y formularios usan la tipografía del sistema para facilitar la lectura.
 
 Los botones tienen relieve, estado de pulsación y foco dorado para teclado. Se mantiene el brillo por rareza en las capturas, con transiciones cortas y respeto por `prefers-reduced-motion`. No se aplican filtros a la escena 3D ni desenfoques de fondo en los paneles. El tema está en `tema-lago.css`, separado de los estilos de estructura y controles, y se incluye con la fuente en la descarga sin conexión.
 

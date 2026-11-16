@@ -3,6 +3,8 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
 const page=await browser.newPage({serviceWorkers:'block',viewport:{width:960,height:540}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(process.env.TEST_URL||'http://127.0.0.1:8080');await page.waitForFunction(()=>window.juegoPreparado);
 await page.click('#boton-invitado');await page.waitForFunction(()=>document.body.classList.contains('jugando'));await page.evaluate(()=>{BIENVENIDA.activa=false;BIENVENIDA._saliendo=false});
+assert.equal(await page.locator('#boton-multijugador,#multijugador,#boton-chat-sala,#chat-sala').count(),0);
+assert.equal(await page.evaluate(()=>typeof window.Multijugador==='undefined'&&!('sala' in BaseDatos)&&!('chatSala' in BaseDatos)),true);
 await page.waitForFunction(()=>!!TIENDA.objetoMundo);await page.waitForTimeout(500);
 const stats=await page.evaluate(()=>({calls:renderizador3D.info.render.calls,terrain:escena3D.children.filter(o=>o.name.startsWith('terreno-')).length}));assert.ok(stats.terrain<40);assert.ok(stats.calls<150);console.log('Render:',stats);
 const dir=process.env.SCREENSHOT_DIR||'test-results';fs.mkdirSync(dir,{recursive:true});await page.screenshot({path:dir+'/juego.png'});

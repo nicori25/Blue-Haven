@@ -1,5 +1,5 @@
 // Generado con npm run build:pwa. Solo recursos públicos del juego.
-self.BLUEHAVEN_VERSION="6711b9ea3d457f57";
+self.BLUEHAVEN_VERSION="115b0fd83531bfac";
 self.BLUEHAVEN_ARCHIVOS=[
   "./audio.js",
   "./auth.js",
@@ -8,7 +8,6 @@ self.BLUEHAVEN_ARCHIVOS=[
   "./calidad.js",
   "./captura.js",
   "./catalogo.js",
-  "./chat-sala.js",
   "./chatbot.js",
   "./comercio.js",
   "./config.js",
@@ -59,7 +58,6 @@ self.BLUEHAVEN_ARCHIVOS=[
   "./models/fishing_rod/scene.bin",
   "./models/fishing_rod/scene.gltf",
   "./models/fishing_rod/textures/fishing_rod_mat_baseColor.png",
-  "./multijugador.js",
   "./ranking.js",
   "./rendimiento.js",
   "./sketch.js",

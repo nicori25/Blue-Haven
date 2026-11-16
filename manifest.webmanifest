@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Blue Haven",
   "short_name": "Blue Haven",
-  "description": "Explorá el lago, pescá y aprendé. Jugá individualmente o en salas con amigos.",
+  "description": "Explorá el lago, pescá y aprendé. Disfrutá la pesca y avanzá en tu propia partida.",
   "lang": "es-AR",
   "start_url": "./?inicio=app",
   "scope": "./",
